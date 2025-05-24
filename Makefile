@@ -1,3 +1,5 @@
+.PHONY: host-index-paths.gz webgraph-outin-paths.gz
+
 host-index-paths.gz:
 	curl  https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz > host-index-paths.gz
 

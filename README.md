@@ -87,6 +87,13 @@ The YAML configuration files are:
 - `action_surt_host_name.yaml`
 - `action_like_surt_host_name.yaml`
 
+If you want to use "web", you'll need to do this to download
+some necessary files:
+
+```
+make host-index-paths.gz webgraph-outin-paths.gz
+```
+
 Here are example command lines:
 
 - `python annotate.py left_local_host_index.yaml join_local_outin.yaml action_surt_host_name.yaml commoncrawl.org`
