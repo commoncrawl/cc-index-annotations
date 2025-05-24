@@ -87,8 +87,15 @@ The YAML configuration files are:
 - `action_surt_host_name.yaml`
 - `action_like_surt_host_name.yaml`
 
-If you want to use "web", you'll need to do this to download
-some necessary files:
+To run the python code, you'll need to install a few things in your
+virtual environment:
+
+```
+pip install -r requirements.txt
+```
+
+If you want to use "web", you'll need to download some necessary
+files:
 
 ```
 make host-index-paths.gz webgraph-outin-paths.gz
