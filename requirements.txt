@@ -1,0 +1,9 @@
+pyyaml
+duckdb
+pyarrow
+surt
+pytest
+pytest-sugar
+
+# development
+flake8

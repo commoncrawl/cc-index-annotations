@@ -1,0 +1,14 @@
+sql: "
+SELECT
+  {columns}
+FROM joined
+WHERE {where}
+ORDER BY hcrank10 DESC
+"
+
+columns: "surt_host_name, crawl, hcrank10, webgraph_outdegree, webgraph_indegree"
+
+where: "surt_host_name LIKE '{argv}%'{and_tld}"
+
+argv:
+  surt_host_name: true

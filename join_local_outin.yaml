@@ -1,0 +1,18 @@
+table:
+  local: /home/cc-pds/commoncrawl/projects/webgraph-outin-testing/v1
+  #web_prefix: https://data.commoncrawl.org/
+  #paths: webgraph-outin-paths.gz
+  #s3_prefix: s3://commoncrawl/
+  #paths: webgraph-outin-paths.gz
+
+limits:
+#  grep: [CC-MAIN-2022]
+#  limit: 1
+
+right_columns:
+- webgraph_outdegree
+- webgraph_indegree
+
+join_columns:
+- surt_host_name
+- crawl
