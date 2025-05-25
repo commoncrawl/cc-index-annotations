@@ -1,5 +1,5 @@
 pyyaml
-duckdb
+duckdb>=1.3  # older versions of httpsfs are not so good at retrying
 pyarrow
 surt
 pytest

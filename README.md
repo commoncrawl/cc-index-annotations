@@ -142,8 +142,3 @@ And example csv output:
 ## TODOS
 
 - copy script that joins an index and annotation and outputs the result to local disk
-
-## LINGERING BUGS
-
-- the configuration that reads directly from AWS S3 tends to randomly throw errors:
-  - duckdb.duckdb.Error: don't know what type:
