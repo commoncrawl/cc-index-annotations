@@ -77,8 +77,11 @@ for argv in argvs:
         print('result is', table.num_rows, 'rows')
 
     if isinstance(argv, str):
-        print('writing', argv+'.csv')
-        with open(argv+'.csv', 'wb') as fd:
+        filename = argv + '.csv' if argv else 'output.csv'
+        print('writing', filename)
+        with open(filename, 'wb') as fd:
             csv.write_csv(table, fd)
     else:
         csv.write_csv(table, sys.stdout.buffer)
+
+

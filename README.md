@@ -107,6 +107,7 @@ Here are example command lines:
 - `python annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org`
 - `python annotate.py left_local_host_index.yaml join_local_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org`
 - `python annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org`
+- `python annotate.py left_web_host_index.yaml join_local_gneissweb.yaml action_gneissweb_medical.yaml`
 
 And example csv output:
 

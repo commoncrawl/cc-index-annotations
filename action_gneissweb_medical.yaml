@@ -1,0 +1,11 @@
+sql: "
+SELECT
+  {columns}
+FROM joined
+WHERE {where}
+"
+
+columns: "surt_host_name, crawl, gneissweb_technology, gneissweb_science, gneissweb_education, gneissweb_medical"
+
+where: "gneissweb_medical > 0.5"
+
