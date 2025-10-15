@@ -1,0 +1,13 @@
+sql: "
+SELECT
+  {columns}
+FROM joined
+WHERE {where}
+"
+
+columns: "url_surtkey, crawl, fetch_time, warc_filename, surt_host_name, crawl, gneissweb_technology, gneissweb_science, gneissweb_education, gneissweb_medical"
+
+where: "gneissweb_medical > 0.5 AND surt_host_name LIKE '{argv}%'{and_tld}"
+
+argv:
+  surt_host_name: true

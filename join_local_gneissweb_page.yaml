@@ -1,0 +1,21 @@
+table:
+  local: /big1/cc-gneiss-annotations/v1.5/urls/CC-MAIN-2013-20
+  #web_prefix: https://data.commoncrawl.org/
+  #paths: webgraph-outin-paths.gz
+  #s3_prefix: s3://commoncrawl/
+  #paths: webgraph-outin-paths.gz
+
+limits:
+#  grep: [CC-MAIN-2022]
+#  limit: 1
+
+right_columns:
+- gneissweb_technology
+- gneissweb_science
+- gneissweb_education
+- gneissweb_medical
+
+join_columns:
+- url_surtkey
+- crawl
+- fetch_time
