@@ -1,6 +1,5 @@
 table:
-  #local: /big1/cc-gneiss-annotations/hosts
-  local: /big1/cc-gneiss-annotations/hosts/CC-MAIN-2021-49
+  local: /big1/cc-gneiss-annotations/hosts/crawl=CC-MAIN-2021-49
   #web_prefix: https://data.commoncrawl.org/
   #paths: webgraph-outin-paths.gz
   #s3_prefix: s3://commoncrawl/

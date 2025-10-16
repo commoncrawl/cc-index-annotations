@@ -1,5 +1,5 @@
 table:
-  local: /big1/cc-gneiss-annotations/v1.5/urls/CC-MAIN-2013-20
+  local: /big1/cc-gneiss-annotations/urls/crawl=CC-MAIN-2013-20
   #web_prefix: https://data.commoncrawl.org/
   #paths: webgraph-outin-paths.gz
   #s3_prefix: s3://commoncrawl/
