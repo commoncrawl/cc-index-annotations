@@ -11,6 +11,7 @@ import utils
 import duck_utils
 
 verbose = 1
+
 duck_utils.init_duckdb_httpfs(verbose=verbose)
 
 database_yaml = sys.argv[1]
@@ -72,9 +73,8 @@ for argv in argvs:
         print('action sql is:\n')
         print(sql)
 
-    table = duckdb.sql(sql).arrow()
-    if verbose:
-        print('result is', table.num_rows, 'rows')
+    batch_reader = duckdb.sql(sql).arrow()
+    table = batch_reader.read_all()  # write_csv can't directly use the batch reader
 
     if isinstance(argv, str):
         filename = argv + '.csv' if argv else 'output.csv'
@@ -83,5 +83,3 @@ for argv in argvs:
             csv.write_csv(table, fd)
     else:
         csv.write_csv(table, sys.stdout.buffer)
-
-

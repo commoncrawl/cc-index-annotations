@@ -1,5 +1,6 @@
 pyyaml
-duckdb>=1.3  # older versions of httpsfs are not so good at retrying
+# older (<1.3) versions of httpsfs are not so good at retrying, 1.4 had a breaking change for sql().arrow()
+duckdb>=1.4
 pyarrow
 surt
 pytest
