@@ -73,8 +73,9 @@ for argv in argvs:
         print('action sql is:\n')
         print(sql)
 
-    batch_reader = duckdb.sql(sql).arrow()
-    table = batch_reader.read_all()  # write_csv can't directly use the batch reader
+    table = duckdb.sql(sql).fetch_arrow_table()
+    if verbose:
+        print('result is', table.num_rows, 'rows')
 
     if isinstance(argv, str):
         filename = argv + '.csv' if argv else 'output.csv'
