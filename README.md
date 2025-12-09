@@ -89,9 +89,9 @@ The example YAML configuration files of the webgraph example are:
 - `action_surt_host_name.yaml`
 - `action_like_surt_host_name.yaml`
 
-The gneissweb YAML configuration files are similarly named, this naming 
-convention is purely for convenience, the system does not require a 'join'
-YAML to be named 'join_' explicitedly to work.
+The gneissweb YAML configuration files are similarly named, please note that
+this naming convention is purely for convenience, the system does not require
+a join file to be named join to function.
 
 To run the python code, you'll need to install a few things in your
 virtual environment:
@@ -100,7 +100,7 @@ virtual environment:
 pip install -r requirements.txt
 ```
 
-If you want to use "web" or "s3", you'll need to download some necessary
+Please note that to run the "web" or "s3" examples, you'll need to download some necessary
 'path.gz' files:
 
 ```
@@ -109,16 +109,24 @@ make gneissweb
 
 ```
 
-Additionally, for "s3", it is advisable to install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) tools and ensure you are logged in via it before running the examples.
+Additionally, for "s3", it is advisable to install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) tools and ensure you are logged in via it before running the s3 examples.
 
 
 Here are example command lines:
 
-- ```cd examples/webgraph
-python ../../annotate.py left_local_host_index.yaml join_local_outin.yaml action_surt_host_name.yaml commoncrawl.org
+
+- Return crawlname, hcrank10 score, webgraph_outdegree, and webgraph_indegree, for hosts matching given hostname 'commoncrawl.org'
 ```
-- `cd examples/webgraph; python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org`
-- `cd examples/webgraph; python ../../annotate.py left_local_host_index.yaml join_local_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org`
+make webgraph
+cd examples/webgraph
+python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org
+```
+- Return crawlname, hcrank10 score, webgraph_outdegree, and webgraph_indegree, for hosts similar to '.commoncrawl.org'
+```
+make webgraph
+cd examples/webgraph
+python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org`
+```
 - `cd examples/webgraph; python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org`
 - `cd examples/gneissweb; python ../../annotate.py left_web_host_index.yaml join_local_gneissweb_host.yaml action_gneissweb_medical.yaml`
 - `cd examples/gneissweb; python ../../annotate.py left_local_page_index.yaml join_local_gneissweb_page.yaml action_gneissweb_medical_pages_like_surt_host_name.yaml .stanford.edu`
