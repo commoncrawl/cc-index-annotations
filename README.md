@@ -128,14 +128,14 @@ cd examples/webgraph
 python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org
 ```
 
-Generate .csv file of the `surt_host_name`,`hcrank`,`hcrank10`,`crawl`,`gneissweb_technology`,`gneissweb_science`,`gneissweb_education`,`gneissweb_medical` for all crawled gneissweb pages of 2021:
+Generate .csv file of the `surt_host_name`, `hcrank`, `hcrank10`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all crawled gneissweb pages of 2021:
 ```
 make gneissweb
 cd examples/gneissweb
 python ../../annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_gneissweb_medical.yaml
 ```
 
-Generate .csv file of the `surt_host_name`,`crawl`,`gneissweb_technology`,`gneissweb_science`,`gneissweb_education`,`gneissweb_medical` for all gneissweb pages on hosts similar to '.stanford.edu':
+Generate .csv file of the `surt_host_name`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all gneissweb pages on hosts similar to '.stanford.edu':
 ```
 make gneissweb
 cd examples/gneissweb
