@@ -109,11 +109,10 @@ make gneissweb
 
 ```
 
-Additionally, for "s3", it is advisable to install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) tools and ensure you are logged in via it before running the s3 examples.
+Additionally, for "s3", it is advisable to install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) tools and ensure you can list our s3 datasets before attempting to run the examples
 
 
-Here are example command lines:
-
+## Examples
 
 Generate .csv file of `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webgraph_indegree`, for hosts matching given hostname 'commoncrawl.org':
 ```
