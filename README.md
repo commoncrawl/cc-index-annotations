@@ -115,22 +115,33 @@ Additionally, for "s3", it is advisable to install the [AWS CLI](https://docs.aw
 Here are example command lines:
 
 
-- Return crawlname, hcrank10 score, webgraph_outdegree, and webgraph_indegree, for hosts matching given hostname 'commoncrawl.org'
+Generate .csv file of `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webgraph_indegree`, for hosts matching given hostname 'commoncrawl.org':
 ```
 make webgraph
 cd examples/webgraph
 python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org
 ```
-- Return crawlname, hcrank10 score, webgraph_outdegree, and webgraph_indegree, for hosts similar to '.commoncrawl.org'
+
+Return `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webgraph_indegree`, for hosts similar to '.commoncrawl.org':
 ```
 make webgraph
 cd examples/webgraph
-python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org`
+python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org
 ```
-- `cd examples/webgraph; python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org`
-- `cd examples/gneissweb; python ../../annotate.py left_web_host_index.yaml join_local_gneissweb_host.yaml action_gneissweb_medical.yaml`
-- `cd examples/gneissweb; python ../../annotate.py left_local_page_index.yaml join_local_gneissweb_page.yaml action_gneissweb_medical_pages_like_surt_host_name.yaml .stanford.edu`
 
+Generate .csv file of the `surt_host_name`,`hcrank`,`hcrank10`,`crawl`,`gneissweb_technology`,`gneissweb_science`,`gneissweb_education`,`gneissweb_medical` for all crawled gneissweb pages of 2021:
+```
+make gneissweb
+cd examples/gneissweb
+python ../../annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_gneissweb_medical.yaml
+```
+
+Generate .csv file of the `surt_host_name`,`crawl`,`gneissweb_technology`,`gneissweb_science`,`gneissweb_education`,`gneissweb_medical` for all gneissweb pages on hosts similar to '.stanford.edu':
+```
+make gneissweb
+cd examples/gneissweb
+python ../../annotate.py left_local_page_index.yaml join_local_gneissweb_page.yaml action_gneissweb_medical_pages_like_surt_host_name.yaml .stanford.edu`
+```
 
 
 And example csv output:
@@ -164,6 +175,10 @@ And example csv output:
 "org,commoncrawl","CC-MAIN-2025-13",4.962,,
 "org,commoncrawl","CC-MAIN-2025-18",4.845,310,1721
 ```
+
+Additionally you can find some simple joins of single crawl data as standalone python scripts in the `examples/duckdb` directory.
+
+
 ## TODOS
 
 - copy script that joins an index and annotation and outputs the result to local disk
