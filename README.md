@@ -109,7 +109,19 @@ make gneissweb
 
 ```
 
-Additionally, for "s3", it is advisable to install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) tools and ensure you can list our s3 datasets before attempting to run the examples
+## AWS Configuration
+
+Please ensure you can access AWS S3 before running the examples.
+Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) tools and ensure you can list our s3 data:
+```
+aws s3 ls s3://commoncrawl/projects/gneissweb-annotation-testing-v1/paths.hosts.txt.gz
+```
+
+If you have multiple AWS profiles defined on your system (eg, multiple sections are defined in `~/.aws/config`) it can be that the system takes the wrong profile.
+To combat this, please set an `AWS_PROFILE` environment variable before executing.
+```
+export AWS_PROFILE=<profilename>
+```
 
 
 ## Examples
