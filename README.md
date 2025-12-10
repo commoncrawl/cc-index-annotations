@@ -44,7 +44,6 @@ leading www and reverses the order of the parts of the hostname:
 
 - example.com/README -> com,example)/README
 - www.example.com/README -> com,example)/README
-- www.com -> com,www)/
 
 For the host index, the primary key is the hostname part of the SURT:
 
