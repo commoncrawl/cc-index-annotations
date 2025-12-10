@@ -3,8 +3,8 @@ table:
   #paths:  # optional, else it will glob *.parquet
   #web_prefix: https://data.commoncrawl.org/
   #paths: paths.gz
-  #s3_prefix: s3://commoncrawl/
-  #paths: ../../host-index-paths.gz
+  s3_prefix: s3://commoncrawl/
+  paths: host-index-paths.gz
 
 limits:
   grep: ["CC-MAIN-2021"]

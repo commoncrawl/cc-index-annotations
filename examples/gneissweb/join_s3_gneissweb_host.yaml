@@ -3,7 +3,7 @@ table:
   #web_prefix: https://data.commoncrawl.org/
   #paths: webgraph-outin-paths.gz
   s3_prefix: s3://commoncrawl/
-  paths: ../../paths.hosts.txt.gz
+  paths: paths.hosts.txt.gz
 
 limits:
   grep: [CC-MAIN-2021]
