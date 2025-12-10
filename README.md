@@ -175,6 +175,6 @@ And example csv output:
 "org,commoncrawl","CC-MAIN-2025-18",4.845,310,1721
 ```
 
-Additionally you can find some simple joins of single crawl data as standalone python scripts in the `examples/duckdb` directory.
+Additionally you can find some simple joins as standalone python scripts in the `examples/duckdb` directory.
 
 

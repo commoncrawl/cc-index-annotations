@@ -4,7 +4,7 @@ table:
   #web_prefix: https://data.commoncrawl.org/
   #paths: paths.gz
   #s3_prefix: s3://commoncrawl/
-  #paths: ../../host-index-paths.gz
+  #paths: host-index-paths.gz
 
 limits:
   grep: ["CC-MAIN-2021"]
