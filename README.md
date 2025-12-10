@@ -139,7 +139,7 @@ Generate .csv file of the `surt_host_name`, `crawl`, `gneissweb_technology`, `gn
 ```
 make gneissweb
 cd examples/gneissweb
-python ../../annotate.py left_local_page_index.yaml join_local_gneissweb_page.yaml action_gneissweb_medical_pages_like_surt_host_name.yaml .stanford.edu`
+python ../../annotate.py left_local_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages_like_surt_host_name.yaml .stanford.edu
 ```
 
 
@@ -178,6 +178,3 @@ And example csv output:
 Additionally you can find some simple joins of single crawl data as standalone python scripts in the `examples/duckdb` directory.
 
 
-## TODOS
-
-- copy script that joins an index and annotation and outputs the result to local disk
