@@ -130,6 +130,7 @@ Generate .csv file of `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webg
 make webgraph
 cd examples/webgraph
 python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org
+cd -
 ```
 
 Generate .csv file of the `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webgraph_indegree`, for hosts similar to '.commoncrawl.org':
@@ -137,6 +138,7 @@ Generate .csv file of the `crawl`, `hcrank10` score, `webgraph_outdegree`, and `
 make webgraph
 cd examples/webgraph
 python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org
+cd -
 ```
 
 Generate .csv file of the `surt_host_name`, `hcrank`, `hcrank10`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all crawled gneissweb pages of 2021:
@@ -144,6 +146,7 @@ Generate .csv file of the `surt_host_name`, `hcrank`, `hcrank10`, `crawl`, `gnei
 make gneissweb
 cd examples/gneissweb
 python ../../annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_gneissweb_medical.yaml
+cd -
 ```
 
 Generate .csv file of the `surt_host_name`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all gneissweb pages on hosts similar to '.stanford.edu':
@@ -151,6 +154,7 @@ Generate .csv file of the `surt_host_name`, `crawl`, `gneissweb_technology`, `gn
 make gneissweb
 cd examples/gneissweb
 python ../../annotate.py left_local_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages_like_surt_host_name.yaml .stanford.edu
+cd -
 ```
 
 
