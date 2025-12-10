@@ -43,7 +43,7 @@ Also, the URL is usually indexed in the SURT form, which drops the
 leading www and reverses the order of the parts of the hostname:
 
 - example.com/README -> com,example)/README
-- www.exmaple.com/README -> com,example)/README
+- www.example.com/README -> com,example)/README
 - www.com -> com,www)/
 
 For the host index, the primary key is the hostname part of the SURT:
@@ -78,14 +78,20 @@ In the following example, the index is our host index, and the
 annotation is taken from our web graph, and contains the columns
 `surt_host_name`, `webgraph_outdegree`, and `webgraph_indegree`.
 
-The YAML configuration files are:
+The example YAML configuration files of the webgraph example are:
 
 - `left_local_host_index.yaml`
 - `left_web_host_index.yaml`
+- `left_s3_host_index.yaml`
 - `join_local_outin.yaml`
 - `join_web_outin.yaml`
+- `join_s3_outin.yaml`
 - `action_surt_host_name.yaml`
 - `action_like_surt_host_name.yaml`
+
+The gneissweb YAML configuration files are similarly named, please note that
+this naming convention is purely for convenience, the system does not require
+a join file to be named join to function.
 
 To run the python code, you'll need to install a few things in your
 virtual environment:
@@ -94,21 +100,48 @@ virtual environment:
 pip install -r requirements.txt
 ```
 
-If you want to use "web", you'll need to download some necessary
-files:
+Please note that to run the "web" or "s3" examples, you'll need to download some necessary
+'path.gz' files:
 
 ```
-make host-index-paths.gz webgraph-outin-paths.gz
+make webgraph
+make gneissweb
+
 ```
 
-Here are example command lines:
+Additionally, for "s3", it is advisable to install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) tools and ensure you can list our s3 datasets before attempting to run the examples
 
-- `python annotate.py left_local_host_index.yaml join_local_outin.yaml action_surt_host_name.yaml commoncrawl.org`
-- `python annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org`
-- `python annotate.py left_local_host_index.yaml join_local_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org`
-- `python annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org`
-- `python annotate.py left_web_host_index.yaml join_local_gneissweb.yaml action_gneissweb_medical.yaml`
-- `python annotate.py left_local_page_index.yaml join_local_gneissweb_page.yaml action_gneissweb_medical_pages_like_surt_host_name.yaml .stanford.edu`
+
+## Examples
+
+Generate .csv file of `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webgraph_indegree`, for hosts matching given hostname 'commoncrawl.org':
+```
+make webgraph
+cd examples/webgraph
+python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org
+```
+
+Return `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webgraph_indegree`, for hosts similar to '.commoncrawl.org':
+```
+make webgraph
+cd examples/webgraph
+python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org
+```
+
+Generate .csv file of the `surt_host_name`, `hcrank`, `hcrank10`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all crawled gneissweb pages of 2021:
+```
+make gneissweb
+cd examples/gneissweb
+python ../../annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_gneissweb_medical.yaml
+```
+
+Generate .csv file of the `surt_host_name`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all gneissweb pages on hosts similar to '.stanford.edu':
+```
+make gneissweb
+cd examples/gneissweb
+python ../../annotate.py left_local_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages_like_surt_host_name.yaml .stanford.edu
+```
+
 
 And example csv output:
 
@@ -141,6 +174,7 @@ And example csv output:
 "org,commoncrawl","CC-MAIN-2025-13",4.962,,
 "org,commoncrawl","CC-MAIN-2025-18",4.845,310,1721
 ```
-## TODOS
 
-- copy script that joins an index and annotation and outputs the result to local disk
+Additionally you can find some simple joins as standalone python scripts in the `examples/duckdb` directory.
+
+

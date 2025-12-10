@@ -1,12 +1,12 @@
 table:
-  local: /big1/cc-gneiss-annotations/hosts/crawl=CC-MAIN-2021-49
+  #local: /big1/cc-gneiss-annotations/urls/crawl=CC-MAIN-2013-20
   #web_prefix: https://data.commoncrawl.org/
   #paths: webgraph-outin-paths.gz
-  #s3_prefix: s3://commoncrawl/
-  #paths: webgraph-outin-paths.gz
+  s3_prefix: s3://commoncrawl/
+  paths: paths.urls.txt.gz
 
 limits:
-#  grep: [CC-MAIN-2022]
+#  grep: [CC-MAIN-2013-20]
 #  limit: 1
 
 right_columns:
@@ -16,5 +16,6 @@ right_columns:
 - gneissweb_medical
 
 join_columns:
-- surt_host_name
+- url_surtkey
 - crawl
+- fetch_time

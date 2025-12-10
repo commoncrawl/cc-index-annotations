@@ -1,0 +1,12 @@
+table:
+  #local: /home/cc-pds/commoncrawl/projects/host-index-testing/v2/
+  #paths:  # optional, else it will glob *.parquet
+  #web_prefix: https://data.commoncrawl.org/
+  #paths: paths.gz
+  s3_prefix: s3://commoncrawl/
+  paths: host-index-paths.gz
+
+limits:
+  grep: ["CC-MAIN-2025", "CC-MAIN-2024"]
+  count: 1
+

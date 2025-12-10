@@ -4,9 +4,9 @@ table:
   #web_prefix: https://data.commoncrawl.org/
   #paths: paths.gz
   #s3_prefix: s3://commoncrawl/
-  #paths: paths.gz
+  #paths: host-index-paths.gz
 
 limits:
-  #grep: ["CC-MAIN-2025", "CC-MAIN-2024"]
-  #count: 1
+  grep: ["CC-MAIN-2025", "CC-MAIN-2024"]
+  count: 1
 
