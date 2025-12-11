@@ -91,6 +91,8 @@ The example YAML configuration files of the webgraph example are:
 The gneissweb YAML configuration files are similarly named, please note that
 this naming convention is purely for convenience, the system does not require
 a join file to be named join to function.
+Caution, the "local" examples requires the data files to be previously downloaded
+to the filesystem. Please see the .yaml file for more details.
 
 To run the python code, you'll need to install a few things in your
 virtual environment:
@@ -149,11 +151,11 @@ python ../../annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml ac
 cd -
 ```
 
-Generate .csv file of the `surt_host_name`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all gneissweb pages on hosts similar to '.stanford.edu':
+Generate .csv file of the `surt_host_name`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all gneissweb pages in a crawl with `gneissweb_medical` score higher than 50%
 ```
 make gneissweb
 cd examples/gneissweb
-python ../../annotate.py left_local_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages_like_surt_host_name.yaml .stanford.edu
+python ../../annotate.py left_web_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages.yaml
 cd -
 ```
 
