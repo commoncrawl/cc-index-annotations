@@ -1,13 +1,10 @@
 table:
-  #local: /big1/cc-gneiss-annotations/urls/crawl=CC-MAIN-2013-20
-  #s3_prefix: s3://commoncrawl/
-  #paths: paths.urls.txt.gz
   web_prefix: https://data.commoncrawl.org/
   paths: paths.urls.txt.gz
 
 limits:
   grep: [CC-MAIN-2020-05]
-  #limit: 1
+  #count: 1
 
 right_columns:
 - gneissweb_technology

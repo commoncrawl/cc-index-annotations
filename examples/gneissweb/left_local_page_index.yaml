@@ -1,11 +1,5 @@
 table:
   local: /home/cc-pds/commoncrawl/cc-index/table/cc-main/warc/crawl=CC-MAIN-2013-20/subset=warc/
-  #web_prefix: https://data.commoncrawl.org/crawl-data/CC-MAIN-2021-49/
-  #paths:  # optional, else it will glob *.parquet
-  #web_prefix: https://data.commoncrawl.org/
-  #paths: paths.gz
-  #s3_prefix: s3://commoncrawl/
-  #paths: cc-index-table.paths.gz
 
 limits:
   #grep: ["CC-MAIN-2025", "CC-MAIN-2024"]
