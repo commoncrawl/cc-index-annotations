@@ -131,7 +131,7 @@ Generate .csv file of `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webg
 ```
 make webgraph
 cd examples/webgraph
-python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org
+python annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org
 cd -
 ```
 
@@ -139,7 +139,7 @@ Generate .csv file of the `crawl`, `hcrank10` score, `webgraph_outdegree`, and `
 ```
 make webgraph
 cd examples/webgraph
-python ../../annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org
+python annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org
 cd -
 ```
 
@@ -147,7 +147,7 @@ Generate .csv file of the `surt_host_name`, `hcrank`, `hcrank10`, `crawl`, `gnei
 ```
 make gneissweb
 cd examples/gneissweb
-python ../../annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_gneissweb_medical.yaml
+python annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_gneissweb_medical.yaml
 cd -
 ```
 
@@ -155,7 +155,7 @@ Generate .csv file of the `surt_host_name`, `crawl`, `gneissweb_technology`, `gn
 ```
 make gneissweb
 cd examples/gneissweb
-python ../../annotate.py left_web_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages.yaml
+python annotate.py left_web_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages.yaml
 cd -
 ```
 
