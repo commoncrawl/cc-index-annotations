@@ -4,6 +4,14 @@ webgraph: examples/webgraph/host-index-paths.gz examples/webgraph/webgraph-outin
 
 gneissweb: examples/gneissweb/host-index-paths.gz examples/gneissweb/paths.hosts.txt.gz examples/gneissweb/paths.urls.txt.gz examples/gneissweb/cc-index-table.paths.gz examples/gneissweb/annotate.py
 
+wikipedia-blacklist: examples/wikipedia-blacklist/blacklist.txt examples/wikipedia-blacklist/blacklist.parquet
+
+examples/wikipedia-blacklist/blacklist.parquet: examples/wikipedia-blacklist/blacklist.txt
+	cd examples/wikipedia-blacklist; python .convert.py; cd -
+
+examples/wikipedia-blacklist/blacklist.txt:
+	curl -L -o examples/wikipedia-blacklist/blacklist.txt https://meta.wikimedia.org/wiki/Spam_blacklist?action=raw
+
 examples/webgraph/host-index-paths.gz:
 	curl  https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz > examples/webgraph/host-index-paths.gz
 examples/webgraph/webgraph-outin-paths.gz:
