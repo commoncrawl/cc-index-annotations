@@ -113,14 +113,14 @@ def extract_domains(file_path):
                                     'surt_host_name': surt_host,
                                     'domain': d,
                                     'domain_regex': domain_regex,
-                                    'in_wikipedia_blacklist': 1
+                                    'in_wikipedia_spamlist': 1
                                 })
                             except:
                                 pass
     return domains
 
-print("Converting blacklist.txt to parquet...")
-domains = extract_domains('blacklist.txt')
+print("Converting wikipedia-spam.txt to parquet...")
+domains = extract_domains('wikipedia-spam.txt')
 df = pd.DataFrame(domains)
-df.to_parquet('blacklist.parquet', index=False)
-df.to_csv('blacklist.tsv', sep='\t', index=False)
+df.to_parquet('wikipedia-spam.parquet', index=False)
+#df.to_csv('wikipedia-spam.tsv', sep='\t', index=False)
