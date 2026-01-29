@@ -1,6 +1,6 @@
-.PHONY: webgraph gneissweb
+.PHONY: web-graph gneissweb
 
-webgraph: examples/webgraph/host-index-paths.gz examples/webgraph/webgraph-outin-paths.gz examples/webgraph/annotate.py
+web-graph: examples/web-graph/host-index-paths.gz examples/web-graph/web-graph-outin-paths.gz examples/web-graph/annotate.py
 
 gneissweb: examples/gneissweb/host-index-paths.gz examples/gneissweb/paths.hosts.txt.gz examples/gneissweb/paths.urls.txt.gz examples/gneissweb/cc-index-table.paths.gz examples/gneissweb/annotate.py
 
@@ -12,12 +12,12 @@ examples/wikipedia-blacklist/blacklist.parquet: examples/wikipedia-blacklist/bla
 examples/wikipedia-blacklist/blacklist.txt:
 	curl -L -o examples/wikipedia-blacklist/blacklist.txt https://meta.wikimedia.org/wiki/Spam_blacklist?action=raw
 
-examples/webgraph/host-index-paths.gz:
-	curl  https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz > examples/webgraph/host-index-paths.gz
-examples/webgraph/webgraph-outin-paths.gz:
-	curl  https://data.commoncrawl.org/projects/webgraph-outin-testing/v1.paths.gz > examples/webgraph/webgraph-outin-paths.gz
-examples/webgraph/annotate.py:
-	cp annotate.py examples/webgraph/
+examples/web-graph/host-index-paths.gz:
+	curl  https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz > examples/web-graph/host-index-paths.gz
+examples/web-graph/web-graph-outin-paths.gz:
+	curl  https://data.commoncrawl.org/projects/web-graph-outin-testing/v1.paths.gz > examples/web-graph/web-graph-outin-paths.gz
+examples/web-graph/annotate.py:
+	cp annotate.py examples/web-graph/
 examples/gneissweb/host-index-paths.gz:
 	curl  https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz > examples/gneissweb/host-index-paths.gz
 examples/gneissweb/paths.hosts.txt.gz:

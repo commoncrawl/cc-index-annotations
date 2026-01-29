@@ -77,7 +77,7 @@ In the following example, the index is our host index, and the
 annotation is taken from our web graph, and contains the columns
 `surt_host_name`, `webgraph_outdegree`, and `webgraph_indegree`.
 
-The example YAML configuration files of the webgraph example are:
+The example YAML configuration files of the Web Graph example are:
 
 - `left_local_host_index.yaml`
 - `left_web_host_index.yaml`
@@ -105,7 +105,7 @@ Please note that to run the "web" or "s3" examples, you'll need to download some
 'path.gz' files:
 
 ```
-make webgraph
+make web-graph
 make gneissweb
 
 ```
@@ -129,16 +129,16 @@ export AWS_PROFILE=<profilename>
 
 Generate .csv file of `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webgraph_indegree`, for hosts matching given hostname 'commoncrawl.org':
 ```
-make webgraph
-cd examples/webgraph
+make web-graph
+cd examples/web-graph
 python annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org
 cd -
 ```
 
 Generate .csv file of the `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webgraph_indegree`, for hosts similar to '.commoncrawl.org':
 ```
-make webgraph
-cd examples/webgraph
+make web-graph
+cd examples/web-graph
 python annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org
 cd -
 ```
