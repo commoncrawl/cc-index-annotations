@@ -1,4 +1,4 @@
-.PHONY: examples
+.PHONY: examples web-graph gneissweb wikipedia
 
 examples: web-graph gneissweb wikipedia
 
@@ -8,18 +8,23 @@ gneissweb: examples/gneissweb/host-index-paths.gz examples/gneissweb/paths.hosts
 
 wikipedia: examples/wikipedia/wikipedia-spam.txt examples/wikipedia/wikipedia-spam.parquet examples/wikipedia/wikipedia-perennial.json.txt
 
-examples/wikipedia/wikipedia-spam.parquet: examples/wikipedia/wikipedia-spam.txt examples/wikipedia/wikipedia-perennial.json.txt
+examples/wikipedia/wikipedia-spam.parquet: examples/wikipedia/wikipedia-spam.txt examples/wikipedia/wikipedia-perennial.json.txt examples/wikipedia/annotate.py examples/wikipedia/host-index-paths.gz
 	cd examples/wikipedia; python .convert.py; cd -
 examples/wikipedia/wikipedia-spam.txt:
 	curl -L -o examples/wikipedia/wikipedia-spam.txt https://meta.wikimedia.org/wiki/Spam_blacklist?action=raw
 examples/wikipedia/wikipedia-perennial.json.txt:
 	curl -L -o examples/wikipedia/wikipedia-perennial.json.txt "https://en.wikipedia.org/w/api.php?action=parse&page=Wikipedia:Reliable_sources/Perennial_sources&format=json"
+examples/wikipedia/annotate.py:
+	cd examples/wikipedia/; ln -s ../../*.py .
+examples/wikipedia/host-index-paths.gz:
+	curl  https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz > examples/web-graph/host-index-paths.gz
+
 examples/web-graph/host-index-paths.gz:
 	curl  https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz > examples/web-graph/host-index-paths.gz
 examples/web-graph/web-graph-outin-paths.gz:
 	curl  https://data.commoncrawl.org/projects/web-graph-outin-testing/v1.paths.gz > examples/web-graph/web-graph-outin-paths.gz
 examples/web-graph/annotate.py:
-	cp annotate.py examples/web-graph/
+	cd examples/web-graph/; ln -s ../../*.py .
 
 examples/gneissweb/host-index-paths.gz:
 	curl  https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz > examples/gneissweb/host-index-paths.gz
@@ -30,4 +35,4 @@ examples/gneissweb/paths.urls.txt.gz:
 examples/gneissweb/cc-index-table.paths.gz:
 	curl https://data.commoncrawl.org/crawl-data/CC-MAIN-2020-05/cc-index-table.paths.gz > examples/gneissweb/cc-index-table.paths.gz
 examples/gneissweb/annotate.py:
-	cp annotate.py examples/gneissweb/
+	cd examples/gneissweb/; ln -s ../../*.py .
