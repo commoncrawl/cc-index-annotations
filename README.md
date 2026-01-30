@@ -159,6 +159,13 @@ python annotate.py left_web_page_index.yaml join_s3_gneissweb_page.yaml action_g
 cd -
 ```
 
+Generate .csv file of all domains in a crawl that are marked 'reliable' in the wikipedia [Perennial sources](https://en.wikipedia.org/wiki/Wikipedia:Reliable_sources/Perennial_sources)
+```
+make wikipedia
+cd examples/wikipedia
+python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_reliable.yaml
+cd -
+```
 
 And example csv output:
 
