@@ -7,7 +7,7 @@ import urllib.request
 import surt
 import pandas as pd
 
-debugging = False
+debugging = False #when enabled, save .tsv files of intermediary and final stages
 
 class SourceParser(HTMLParser):
     def __init__(self):
@@ -230,6 +230,9 @@ def extract_domains(file_path):
             if not domain_regex:
                 continue
             
+            if "/" in domain_regex:
+                continue
+
             for char_expanded in expand_chars(domain_regex):
                 for opt_expanded in expand_optionals(char_expanded):
                     for expanded in expand_alternations(opt_expanded):
@@ -300,16 +303,6 @@ if __name__ == "__main__":
     df["domain"] = df["domain"].combine_first(df["domain_spam"])
     df = df.drop(columns=["domain_spam"], errors='ignore')
 
-#    df = per_df.merge(
-#        spam_df[["surt_host_name", "wikipedia_spam"]],
-#        on="surt_host_name",
-#        how="outer"
-#    )
-#
-#    df["domain"] = df["domain"].combine_first( #backfil if not found from other df
-#        spam_df.set_index("surt_host_name")["domain"]
-#    )
-#
     df = df[[
         "surt_host_name",
         "domain",
@@ -320,10 +313,7 @@ if __name__ == "__main__":
     ]]
 
     bool_cols = ["wikipedia_deprecated", "wikipedia_unreliable", "wikipedia_reliable", "wikipedia_spam"]
-    #df[bool_cols] = df[bool_cols].fillna(False).astype(bool) # fill empties
-    #for col in bool_cols:
-    #    df[col] = df[col].fillna(False).astype(bool) #supress warning on empty fill
-    #df[bool_cols] = df[bool_cols].fillna(False).infer_objects(copy=False).astype(bool)
+
     for col in bool_cols:
         df[col] = df[col].astype('boolean').fillna(False).astype(bool)
 
