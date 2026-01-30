@@ -1,6 +1,6 @@
-This example uses an interpreted version of the [wikipedia spam domain list](https://meta.wikimedia.org/wiki/Spam_blacklist) and [wikipedia perennial] to generate an [Common Crawl Annotation](https://github.com/commoncrawl/cc-index-annotations)
+This example creates interpreted versions of the [Wikipedia spam domain list](https://meta.wikimedia.org/wiki/Spam_blacklist) and the [Wikipedia perennial sources domains](https://en.wikipedia.org/wiki/Wikipedia:Reliable_sources/Perennial_sources) to generate a [Common Crawl Annotation](https://github.com/commoncrawl/cc-index-annotations) file.
 
-The convert.py script takes the regexes from the blacklist and expands these to likely entries, 
+The convert script expands the matching patterns from the spam list to likely entries, 
 for instance turning the regular expression `\bshortenlinks\.(?:com|org)\b` into both the domains `shortenlinks.org` and `shortenlinks.com`.
 
 The resulting list of domains is therefore only an approximation of the possible matches these patterns could result in, where possible we've inserted somewhat common and sane defaults.
