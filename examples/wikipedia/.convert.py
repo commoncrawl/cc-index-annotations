@@ -107,26 +107,6 @@ def fetch_and_parse(filepath):
 
     return parser.sources
 
-#def fetch_and_parse():
-#    url = "https://en.wikipedia.org/w/api.php?action=parse&page=Wikipedia:Reliable_sources/Perennial_sources&format=json"
-#    req = urllib.request.Request(url, headers={
-#        "User-Agent": "cc-index-annotations/1.0 (your@email)"
-#    })
-#    with urllib.request.urlopen(req, timeout=30) as response:
-#        data = json.loads(response.read())
-#    
-#    html = data["parse"]["text"]["*"]
-#    
-#    parser = SourceParser()
-#    parser.feed(html)
-#    
-#    extract_domains_from_linkchecker(html, parser.sources)
-#    
-#    for source in parser.sources:
-#        source["domains"] = [d for d in source["domains"] if "spamcheck.toolforge.org" not in d and "wikipedia.org" not in d]
-#    
-#    return parser.sources
-
 def extract_perennials(filepath):
     sources = fetch_and_parse(filepath)
     
@@ -230,7 +210,7 @@ def extract_domains(file_path):
             if not domain_regex:
                 continue
             
-            if "/" in domain_regex:
+            if "/" in domain_regex: #skip patterns that require a file path to not create false positives
                 continue
 
             for char_expanded in expand_chars(domain_regex):
