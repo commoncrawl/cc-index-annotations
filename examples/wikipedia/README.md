@@ -14,7 +14,7 @@ the resulting `wikipedia-domains.parquet` file consists of the following columns
 
 | surt_host_name |   domain   | wikipedia_deprecated | wikipedia_unreliable | wikipedia_reliable | wikipedia_spam |
 |----------------|------------|----------------------|----------------------|--------------------|----------------|
-[ com,example    | example.com| False                | True                 | True               | False          |
+| com,example    | example.com| False                | True                 | True               | False          |
 `[...]`
 
 
