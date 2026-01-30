@@ -4,6 +4,7 @@ pyarrow
 surt
 pytest
 pytest-sugar
+pandas
 
 # development
 flake8
