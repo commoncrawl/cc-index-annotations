@@ -1,10 +1,12 @@
 table:
   web_prefix: https://data.commoncrawl.org/
-  paths: web-graph-outin-paths.gz
+  paths: ../web-graph/web-graph-outin-paths.gz
 
 limits:
-#  grep: [CC-MAIN-2022]
-#  count: 1
+  grep: [CC-MAIN-2024-33]
+#  count: 100
+
+join_type: INNER
 
 right_columns:
 - webgraph_outdegree

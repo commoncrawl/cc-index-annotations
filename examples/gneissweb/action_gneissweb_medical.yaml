@@ -7,5 +7,5 @@ WHERE {where}
 
 columns: "surt_host_name, crawl, hcrank, hcrank10, gneissweb_technology, gneissweb_science, gneissweb_education, gneissweb_medical"
 
-where: "gneissweb_medical > 0.5"
+where: "gneissweb_medical > 0.5 AND crawl = 'CC-MAIN-2021-49'"
 

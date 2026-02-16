@@ -1,0 +1,14 @@
+sql: "
+SELECT
+  {columns}
+FROM joined
+WHERE {where}
+"
+
+#columns: "surt_host_name, crawl, domain, wikipedia_deprecated, wikipedia_unreliable, wikipedia_reliable, wikipedia_spam"
+columns: "surt_host_name, crawl, wikipedia_deprecated, wikipedia_unreliable, wikipedia_reliable, wikipedia_spam, hcrank10, webgraph_outdegree, webgraph_indegree"
+
+where: "wikipedia_unreliable = 1 AND wikipedia_spam = 1 AND hcrank10 > 5 AND crawl = 'CC-MAIN-2024-33'"
+
+
+

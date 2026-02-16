@@ -1,6 +1,6 @@
 table:
   s3_prefix: s3://commoncrawl/
-  paths: webgraph-outin-paths.gz
+  paths: web-graph-outin-paths.gz
 
 limits:
 #  grep: [CC-MAIN-2022]

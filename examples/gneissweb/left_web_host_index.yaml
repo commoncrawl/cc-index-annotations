@@ -3,6 +3,6 @@ table:
   paths: host-index-paths.gz
 
 limits:
-  grep: ["CC-MAIN-2021"]
+  #grep: ["CC-MAIN-2021"]
   #count: 1
 

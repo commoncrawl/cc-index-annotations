@@ -13,13 +13,23 @@ def init_duckdb_httpfs(verbose=0):
     # default is 3, 10 should be 1024 * wait
     # I used to have 1000 retries and that definitely wasn't happening
     duckdb.sql('SET http_retries = 10')
-    duckdb.sql("SET enable_progress_bar=true")
+    if not os.getenv('CI', False):
+        duckdb.sql("SET enable_progress_bar=true")
 
     # tell duckdb to use AWS credentials from chain or environment
-    duckdb.sql("""CREATE OR REPLACE SECRET secret (
+    try:
+        duckdb.sql("""CREATE OR REPLACE SECRET secret (
     TYPE s3,
     PROVIDER credential_chain
 );""")
+    except Exception as e:
+        #no aws credentials found, perhaps github runner, fallback to anon
+        print(f"Could not set up credentials, trying anonymous access: {e}")
+        duckdb.sql("""CREATE OR REPLACE SECRET secret (
+            TYPE S3,
+            PROVIDER CONFIG,
+            REGION 'us-east-1'
+        );""")
 
     duckdb.sql('SET http_retry_wait_ms = 2000')
 

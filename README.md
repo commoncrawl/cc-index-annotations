@@ -167,6 +167,14 @@ python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_rel
 cd -
 ```
 
+An example how to combine multiple database .yaml configurations into a single result. In this case combining the web-graph and wikipedia examples into a single export:
+```
+make web-graph-wikipedia
+cd examples/web-graph-wikipedia
+python annotate.py left_web_host_index.yaml join_web_outin.yaml join_wikipedia.yaml action_combined.yaml
+cd -
+```
+
 And example csv output:
 
 ```

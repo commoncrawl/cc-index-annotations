@@ -7,7 +7,7 @@ import urllib.request
 import surt
 import pandas as pd
 
-debugging = False #when enabled, save .tsv files of intermediary and final stages
+debugging = True  #when enabled, save .tsv files of intermediary and final stages
 
 class SourceParser(HTMLParser):
     def __init__(self):
@@ -200,12 +200,24 @@ def normalize_domain(regex):
 
 def extract_domains(file_path):
     domains = []
+    skip_section = False
     with open(file_path) as f:
         for line in f:
             line = line.strip()
+
+            if line == "# URL shorteners":
+                skip_section = True
+                continue
+            if line == "# end of URL shorteners":
+                skip_section = False
+                continue
+            if skip_section:
+                #print(f"Skipping {line}")
+                continue
+
             if not line or line.startswith('#'):
                 continue
-            
+
             domain_regex = line.split('#')[0].strip()
             if not domain_regex:
                 continue
@@ -225,9 +237,12 @@ def extract_domains(file_path):
                         # if '.' not in domain:  # If no TLD, add common ones
                         if domain.startswith('.') and domain.count('.') == 1: #skip tld matches
                             continue
-                        if '.' not in domain or domain.startswith('.'):
+                        if '.' not in domain: # or domain.startswith('.'):
                             for tld in ['com', 'net', 'org', 'info']:
                                 domains_to_process.append(f"{domain}.{tld}")
+                        # If it starts with dot but has more (like ".foo.bar"), strip leading dot
+                        elif domain.startswith('.'):
+                            domains_to_process.append(domain.lstrip('.'))
                         else:
                             domains_to_process.append(domain)
                         

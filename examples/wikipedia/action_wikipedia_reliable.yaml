@@ -5,7 +5,7 @@ FROM joined
 WHERE {where}
 "
 
-columns: "surt_host_name, crawl, domain, wikipedia_deprecated, wikipedia_unreliable, wikipedia_reliable, wikipedia_spam"
+columns: "surt_host_name, crawl, wikipedia_deprecated, wikipedia_unreliable, wikipedia_reliable, wikipedia_spam"
 
-where: "wikipedia_reliable = 1"
+where: "wikipedia_reliable = 1 AND crawl = 'CC-MAIN-2021-49'"
 
