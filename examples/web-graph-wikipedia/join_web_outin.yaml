@@ -3,7 +3,7 @@ table:
   paths: ../web-graph/web-graph-outin-paths.gz
 
 limits:
-#  grep: [CC-MAIN-2022]
+  grep: [CC-MAIN-2024-33]
 #  count: 100
 
 join_type: INNER

@@ -2,4 +2,7 @@ table:
   web_prefix: https://data.commoncrawl.org/
   paths: ../web-graph/host-index-paths.gz
 
+limits:
+  grep: [CC-MAIN-2024-33]
+
 

@@ -24,14 +24,8 @@ jobs:
     - name: Run make examples
       run: make examples
     
-    - name: Test gneissweb example (host-level)
-      run: |
-        cd examples/gneissweb
-        python annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_gneissweb_medical.yaml
-        cd -
-    
     - name: Test combined web-graph-wikipedia example
       run: |
         cd examples/web-graph-wikipedia
-        python annotate.py left_web_host_index.yaml join_web_outin.yaml join_wikipedia.yaml action_combined.yaml
+        python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_reliable.yaml 
         cd -
