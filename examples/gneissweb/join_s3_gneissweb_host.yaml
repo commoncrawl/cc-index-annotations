@@ -3,7 +3,7 @@ table:
   paths: paths.hosts.txt.gz
 
 limits:
-  grep: [CC-MAIN-2021]
+  #grep: [CC-MAIN-2021]
   #count: 3
 
 right_columns:

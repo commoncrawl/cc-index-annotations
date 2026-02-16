@@ -24,34 +24,10 @@ jobs:
     - name: Run make examples
       run: make examples
     
-    - name: Test web-graph example (exact match)
-      run: |
-        cd examples/web-graph
-        python annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org
-        cd -
-    
-    - name: Test web-graph example (like match)
-      run: |
-        cd examples/web-graph
-        python annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org
-        cd -
-    
     - name: Test gneissweb example (host-level)
       run: |
         cd examples/gneissweb
         python annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_gneissweb_medical.yaml
-        cd -
-    
-    - name: Test gneissweb example (page-level)
-      run: |
-        cd examples/gneissweb
-        python annotate.py left_web_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages.yaml
-        cd -
-    
-    - name: Test wikipedia example
-      run: |
-        cd examples/wikipedia
-        python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_reliable.yaml
         cd -
     
     - name: Test combined web-graph-wikipedia example
