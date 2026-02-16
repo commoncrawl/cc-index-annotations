@@ -16,11 +16,52 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'  # adjust to your version
+        python-version: '3.11'
     
     - name: Install dependencies
       run: pip install -r requirements.txt
     
-    - name: Run make
+    - name: Run make examples
       run: make examples
-      
+    
+    - name: Test web-graph example (exact match)
+      run: |
+        make web-graph
+        cd examples/web-graph
+        python annotate.py left_web_host_index.yaml join_web_outin.yaml action_surt_host_name.yaml commoncrawl.org
+        cd -
+    
+    - name: Test web-graph example (like match)
+      run: |
+        make web-graph
+        cd examples/web-graph
+        python annotate.py left_web_host_index.yaml join_web_outin.yaml action_like_surt_host_name.yaml .commoncrawl.org
+        cd -
+    
+    - name: Test gneissweb example (host-level)
+      run: |
+        make gneissweb
+        cd examples/gneissweb
+        python annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_gneissweb_medical.yaml
+        cd -
+    
+    - name: Test gneissweb example (page-level)
+      run: |
+        make gneissweb
+        cd examples/gneissweb
+        python annotate.py left_web_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages.yaml
+        cd -
+    
+    - name: Test wikipedia example
+      run: |
+        make wikipedia
+        cd examples/wikipedia
+        python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_reliable.yaml
+        cd -
+    
+    - name: Test combined web-graph-wikipedia example
+      run: |
+        make web-graph-wikipedia
+        cd examples/web-graph-wikipedia
+        python annotate.py left_web_host_index.yaml join_web_outin.yaml join_wikipedia.yaml action_combined.yaml
+        cd -

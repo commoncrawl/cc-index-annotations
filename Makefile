@@ -1,6 +1,6 @@
 .PHONY: examples web-graph gneissweb wikipedia
 
-examples: web-graph gneissweb wikipedia
+examples: web-graph gneissweb wikipedia web-graph-wikipedia
 
 web-graph: examples/web-graph/host-index-paths.gz examples/web-graph/web-graph-outin-paths.gz examples/web-graph/annotate.py
 
