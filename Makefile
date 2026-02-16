@@ -8,6 +8,11 @@ gneissweb: examples/gneissweb/host-index-paths.gz examples/gneissweb/paths.hosts
 
 wikipedia: examples/wikipedia/wikipedia-spam.txt examples/wikipedia/wikipedia-domains.parquet examples/wikipedia/wikipedia-perennial.json.txt examples/wikipedia/annotate.py examples/wikipedia/host-index-paths.gz
 
+web-graph-wikipedia: web-graph wikipedia examples/web-graph-wikipedia/annotate.py
+
+examples/web-graph-wikipedia/annotate.py:
+	cd examples/web-graph-wikipedia/; ln -s ../../*.py .
+
 examples/wikipedia/wikipedia-spam.txt:
 	curl -L -o examples/wikipedia/wikipedia-spam.txt --retry 1000 --retry-all-errors --retry-delay 1 https://meta.wikimedia.org/wiki/Spam_blacklist?action=raw
 examples/wikipedia/wikipedia-perennial.json.txt:
@@ -15,14 +20,14 @@ examples/wikipedia/wikipedia-perennial.json.txt:
 examples/wikipedia/wikipedia-domains.parquet: examples/wikipedia/wikipedia-spam.txt examples/wikipedia/wikipedia-perennial.json.txt 
 	cd examples/wikipedia; python .convert.py; cd -
 examples/wikipedia/host-index-paths.gz:
-	curl -L -o examples/wikipedia/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz 
+	curl -L -o examples/wikipedia/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
 examples/wikipedia/annotate.py:
 	cd examples/wikipedia/; ln -s ../../*.py .
 
 examples/web-graph/host-index-paths.gz:
-	curl  https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz > examples/web-graph/host-index-paths.gz
+	curl -L -o examples/web-graph/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
 examples/web-graph/web-graph-outin-paths.gz:
-	curl  https://data.commoncrawl.org/projects/web-graph-outin-testing/v1.paths.gz > examples/web-graph/web-graph-outin-paths.gz
+	curl -L -o examples/web-graph/web-graph-outin-paths.gz  --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/webgraph-outin-testing/v1.paths.gz"
 examples/web-graph/annotate.py:
 	cd examples/web-graph/; ln -s ../../*.py .
 

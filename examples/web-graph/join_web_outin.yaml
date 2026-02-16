@@ -1,6 +1,6 @@
 table:
   web_prefix: https://data.commoncrawl.org/
-  paths: webgraph-outin-paths.gz
+  paths: web-graph-outin-paths.gz
 
 limits:
 #  grep: [CC-MAIN-2022]
