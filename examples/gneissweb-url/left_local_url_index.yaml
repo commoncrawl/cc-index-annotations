@@ -1,0 +1,7 @@
+table:
+  local: /home/cc-pds/commoncrawl/cc-index/table/cc-main/warc/crawl=*/subset=warc/
+
+limits:
+  #grep: ["CC-MAIN-2025", "CC-MAIN-2024"]
+  #count: 1
+

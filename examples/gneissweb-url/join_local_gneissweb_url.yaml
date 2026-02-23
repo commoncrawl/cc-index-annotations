@@ -1,5 +1,5 @@
 table:
-  local: /big1/cc-gneiss-annotations/urls/crawl=CC-MAIN-2013-20
+  local: /big1/cc-gneiss-annotations/urls/crawl=*
 
 limits:
 #  grep: [CC-MAIN-2022]
