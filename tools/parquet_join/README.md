@@ -37,16 +37,14 @@ automatic `_leftN`/`_rightN` suffixes.
 
 ## Examples
 
-The host index and annotation parquet files live on S3 as Hive-partitioned datasets:
+The annotation parquet files live on S3 as Hive-partitioned datasets:
 
-| Dataset            | S3 path                                                                     |
-|--------------------|-----------------------------------------------------------------------------|
-| Host index         | `s3://commoncrawl/projects/host-index-testing/v2/crawl=*/*.parquet`         |
-| Web graph          | `s3://commoncrawl/projects/webgraph-annotation-testing-v1/hosts/crawl=*/*.parquet` |
-| GneissWeb          | `s3://commoncrawl/projects/gneissweb-annotation-testing-v1/hosts/crawl=*/*.parquet` |
+| Dataset   | S3 path                                                                            |
+|-----------|------------------------------------------------------------------------------------|
+| Web graph | `s3://commoncrawl/projects/webgraph-annotation-testing-v1/hosts/crawl=*/*.parquet` |
+| GneissWeb | `s3://commoncrawl/projects/gneissweb-annotation-testing-v1/hosts/crawl=*/*.parquet` |
 
-All examples below join on `surt_host_name` and assume you have local copies of
-the parquet files for the crawl(s) of interest (see [Downloading the data](#downloading-the-data)).
+The examples below assume local copies of the parquet files for a crawl of interest,
 
 ### Downloading the example data
 
@@ -63,15 +61,33 @@ aws s3 sync \
   ./gneissweb/
 ```
 
-Then join the two directories directly — all parquet shards in each directory are
+### Join two annotation directories
+
+When joining the two directories directly — all parquet shards in each directory are
 concatenated automatically. Without prefixes, any columns that overlap (other than
 the join key) get `_leftN`/`_rightN` suffixes:
 
+
 ```bash
 python parquet_join.py \
-  -o webgraph_gneissweb_2024-30.parquet \
+  -o webgraph_gneissweb.parquet \
   -j surt_host_name --how outer \
   ./webgraph/ \
   ./gneissweb/
 ```
 
+All parquet shards in each directory are concatenated automatically.
+Any overlapping non-join column names get `_leftN`/`_rightN` suffixes.
+
+### Join with prefixes
+
+```bash
+python parquet_join.py \
+  -o webgraph_gneissweb.parquet \
+  -j surt_host_name --how outer \
+  ./webgraph/:wg_ \
+  ./gneissweb/:gw_
+```
+
+Result columns: `surt_host_name`, `wg_webgraph_outdegree`, `wg_webgraph_indegree`, …,
+`gw_gneissweb_education`, `gw_gneissweb_medical`, …
