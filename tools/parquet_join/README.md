@@ -42,9 +42,6 @@ The host index and annotation parquet files live on S3 as Hive-partitioned datas
 | Web graph          | `s3://commoncrawl/projects/webgraph-annotation-testing-v1/hosts/crawl=*/*.parquet` |
 | GneissWeb          | `s3://commoncrawl/projects/gneissweb-annotation-testing-v1/hosts/crawl=*/*.parquet` |
 
-All examples below join on `surt_host_name` and assume you have local copies of
-the parquet files for the crawl(s) of interest (see [Downloading the data](#downloading-the-data)).
-
 ### Host index + web graph (with prefixes)
 
 ```bash
