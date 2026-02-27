@@ -41,7 +41,7 @@ The annotation parquet files live on S3 as Hive-partitioned datasets:
 
 | Dataset   | S3 path                                                                            |
 |-----------|------------------------------------------------------------------------------------|
-| Web graph | `s3://commoncrawl/projects/webgraph-annotation-testing-v1/hosts/crawl=*/*.parquet` |
+| Web graph | `s3://commoncrawl/projects/webgraph-outin-testing/v2/crawl=*/*.parquet` |
 | GneissWeb | `s3://commoncrawl/projects/gneissweb-annotation-testing-v1/hosts/crawl=*/*.parquet` |
 
 The examples below assume local copies of the parquet files for a crawl of interest,
@@ -53,11 +53,11 @@ host-level data:
 
 ```bash
 aws s3 sync \
-  s3://commoncrawl/projects/webgraph-annotation-testing-v1/hosts/crawl=CC-MAIN-2024-30/ \
+   s3://commoncrawl/projects/webgraph-outin-testing/v2/crawl=CC-MAIN-2024-18/ \
   ./webgraph/
 
 aws s3 sync \
-  s3://commoncrawl/projects/gneissweb-annotation-testing-v1/hosts/crawl=CC-MAIN-2024-30/ \
+  s3://commoncrawl/projects/gneissweb-annotation-testing-v1/hosts/crawl=CC-MAIN-2024-18/ \
   ./gneissweb/
 ```
 
