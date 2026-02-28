@@ -61,7 +61,20 @@ aws s3 sync \
   ./gneissweb/
 ```
 
-### Join two annotation directories
+### Join with prefixes
+
+```bash
+python parquet_join.py \
+  -o webgraph_gneissweb.parquet \
+  -j surt_host_name --how outer \
+  ./webgraph/:wg_ \
+  ./gneissweb/:gw_
+```
+
+Result columns: `surt_host_name`, `wg_webgraph_outdegree`, `wg_webgraph_indegree`, …,
+`gw_gneissweb_education`, `gw_gneissweb_medical`, …
+
+### Join without prefixes
 
 When joining the two directories directly — all parquet shards in each directory are
 concatenated automatically. Without prefixes, any columns that overlap (other than
@@ -134,15 +147,3 @@ gneissweb_medical: 0.13582982309162617
 ```
 
 
-### Join with prefixes
-
-```bash
-python parquet_join.py \
-  -o webgraph_gneissweb.parquet \
-  -j surt_host_name --how outer \
-  ./webgraph/:wg_ \
-  ./gneissweb/:gw_
-```
-
-Result columns: `surt_host_name`, `wg_webgraph_outdegree`, `wg_webgraph_indegree`, …,
-`gw_gneissweb_education`, `gw_gneissweb_medical`, …
