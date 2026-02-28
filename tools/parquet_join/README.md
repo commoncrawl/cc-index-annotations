@@ -14,26 +14,57 @@ pip install -r requirements.txt
 python parquet_join.py [options] input1 [input2 ...] -o OUTPUT
 ```
 
-Each input uses the format `path[:prefix[:join_cols]]`:
+Each input uses the format `path[:prefix[:join_cols[:exclude_cols]]]`:
 
-| Segment     | Description                                   | Required |
-|-------------|-----------------------------------------------|----------|
-| `path`      | A `.parquet` file, glob, or directory         | yes      |
-| `prefix`    | String prepended to all non-join column names | no       |
-| `join_cols` | Comma-separated join key(s) for this file     | no       |
+| Segment        | Description                                   | Required |
+|----------------|-----------------------------------------------|----------|
+| `path`         | A `.parquet` file, glob, or directory         | yes      |
+| `prefix`       | String prepended to all non-join column names | no       |
+| `join_cols`    | Comma-separated join key(s) for this file     | no       |
+| `exclude_cols` | Comma-separated columns to drop from output   | no       |
 
 ### Options
 
 | Flag                | Description                                        |
 |---------------------|----------------------------------------------------|
-| `-o`, `--output`    | Output parquet file path (required)                |
+| `-o`, `--output`    | Output parquet file path (required unless `--inspect`) |
 | `-j`, `--join-cols` | Default join columns applied to all inputs         |
 | `--how`             | Join type: `inner` (default), `outer`, `left`, `right`, `cross` |
+| `--inspect`         | Show columns of all inputs and exit                |
 
 Prefixes are applied to every column **except** the join columns.
 When a path is a directory, all `.parquet` files underneath it are concatenated
 before joining. Duplicate non-join column names that remain after prefixing get
 automatic `_leftN`/`_rightN` suffixes.
+
+### Inspecting columns
+
+Use `--inspect` to list the schema of each input before writing a join.
+
+```bash
+python parquet_join.py --inspect \
+  -j surt_host_name \
+  ./webgraph/:wg_ \
+  ./gneissweb/:gw_
+```
+
+### Excluding columns
+
+The fourth colon-delimited segment drops columns from a given input:
+
+```bash
+python parquet_join.py \
+  -o joined.parquet \
+  -j surt_host_name --how outer \
+  ./webgraph/:wg_::webgraph_outdegree \
+  ./gneissweb/:gw_::gneissweb_medical,in_gneissweb
+```
+
+This keeps all webgraph columns except `webgraph_outdegree`, and all gneissweb
+columns except `gneissweb_medical` and `in_gneissweb`. Note the empty `join_cols`
+segment (`::`) when relying on `-j` for join keys.
+
+Excluded columns are also annotated in `--inspect` output.
 
 ## Examples
 
@@ -145,5 +176,3 @@ gneissweb_education: 0.03020171052776277
 gneissweb_medical: 0.13582982309162617
 [...]
 ```
-
-

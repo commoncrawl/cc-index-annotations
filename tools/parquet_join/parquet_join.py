@@ -5,12 +5,13 @@ import sys
 import duckdb
 
 
-def parse_input(spec: str) -> tuple[str, str | None, list[str] | None]:
+def parse_input(spec: str) -> tuple[str, str | None, list[str] | None, list[str] | None]:
     parts = spec.split(":")
     path = parts[0]
     prefix = parts[1] if len(parts) > 1 and parts[1] else None
     keys = parts[2].split(",") if len(parts) > 2 and parts[2] else None
-    return path, prefix, keys
+    exclude = parts[3].split(",") if len(parts) > 3 and parts[3] else None
+    return path, prefix, keys, exclude
 
 
 def resolve_path(path: str) -> str:
@@ -28,10 +29,11 @@ def get_columns(con: duckdb.DuckDBPyConnection, path: str) -> list[str]:
     ).fetchall()]
 
 
-def build_select(columns: list[str], alias: str, prefix: str | None, join_cols: list[str]) -> list[str]:
+def build_select(columns: list[str], alias: str, prefix: str | None, join_cols: list[str], exclude: list[str] | None) -> list[str]:
     parts = []
+    skip = set(join_cols) | set(exclude or [])
     for col in columns:
-        if col in join_cols:
+        if col in skip:
             continue
         out_name = f"{prefix}{col}" if prefix else col
         parts.append(f'{alias}."{col}" AS "{out_name}"')
@@ -45,15 +47,38 @@ def build_join_key_select(join_cols: list[str], num_tables: int, how: str) -> li
     return [f't0."{c}"' for c in join_cols]
 
 
+def inspect(con: duckdb.DuckDBPyConnection, inputs: list[tuple]) -> None:
+    for i, (pattern, prefix, keys, exclude) in enumerate(inputs):
+        cols = get_columns(con, pattern)
+        label = f"[t{i}] {pattern}"
+        if prefix:
+            label += f"  prefix={prefix}"
+        if keys:
+            label += f"  join={','.join(keys)}"
+        if exclude:
+            label += f"  exclude={','.join(exclude)}"
+        print(label, file=sys.stderr)
+        for col in cols:
+            markers = []
+            if keys and col in keys:
+                markers.append("join")
+            if exclude and col in exclude:
+                markers.append("excluded")
+            suffix = f"  ({', '.join(markers)})" if markers else ""
+            print(f"  {col}{suffix}", file=sys.stderr)
+        print(file=sys.stderr)
+
+
 def main():
     p = argparse.ArgumentParser(
-        description="Join parquet files/dirs using DuckDB. Each input is path[:prefix[:join_cols]]",
-        epilog="Example: %(prog)s -o out.parquet ./left_dir/:l_:id ./right_dir/:r_:id",
+        description="Join parquet files/dirs using DuckDB. Each input is path[:prefix[:join_cols[:exclude_cols]]]",
+        epilog="Example: %(prog)s -o out.parquet ./left/:l_:id:drop_me ./right/:r_:id",
     )
-    p.add_argument("inputs", nargs="+", help="path[:prefix[:col1,col2,...]] — path can be a file, glob, or directory")
-    p.add_argument("-o", "--output", required=True)
+    p.add_argument("inputs", nargs="+", help="path[:prefix[:col1,col2,...[:excl1,excl2,...]]]")
+    p.add_argument("-o", "--output")
     p.add_argument("-j", "--join-cols", help="default join columns (comma-sep)")
     p.add_argument("--how", default="inner", choices=["inner", "outer", "left", "right", "cross"])
+    p.add_argument("--inspect", action="store_true", help="show columns of all inputs and exit")
     args = p.parse_args()
 
     default_keys = args.join_cols.split(",") if args.join_cols else None
@@ -61,10 +86,17 @@ def main():
 
     inputs = []
     for spec in args.inputs:
-        path, prefix, keys = parse_input(spec)
+        path, prefix, keys, exclude = parse_input(spec)
         keys = keys or default_keys
         pattern = resolve_path(path)
-        inputs.append((pattern, prefix, keys))
+        inputs.append((pattern, prefix, keys, exclude))
+
+    if args.inspect:
+        inspect(con, inputs)
+        return
+
+    if not args.output:
+        p.error("-o/--output is required when not using --inspect")
 
     if len(inputs) < 2:
         sys.exit("Need at least 2 input files")
@@ -73,24 +105,23 @@ def main():
     if not join_cols:
         sys.exit("No join columns specified")
 
-    # start from first input
-    pattern0, prefix0, _ = inputs[0]
+    pattern0, prefix0, _, exclude0 = inputs[0]
     cols0 = get_columns(con, pattern0)
     select_parts = build_join_key_select(join_cols, len(inputs), args.how)
-    select_parts += build_select(cols0, "t0", prefix0, join_cols)
+    select_parts += build_select(cols0, "t0", prefix0, join_cols, exclude0)
     from_clause = f"read_parquet('{pattern0}', union_by_name=true) AS t0"
     join_clauses = []
 
     how_sql = {"inner": "INNER", "outer": "FULL OUTER", "left": "LEFT", "right": "RIGHT", "cross": "CROSS"}
     join_type = how_sql[args.how]
 
-    for i, (pattern, prefix, keys) in enumerate(inputs[1:], 1):
+    for i, (pattern, prefix, keys, exclude) in enumerate(inputs[1:], 1):
         alias = f"t{i}"
         cols = get_columns(con, pattern)
         on_cols = keys or default_keys
         if not on_cols:
             sys.exit("No join columns specified")
-        select_parts += build_select(cols, alias, prefix, on_cols)
+        select_parts += build_select(cols, alias, prefix, on_cols, exclude)
         on_clause = " AND ".join(f't0."{c}" = {alias}."{c}"' for c in on_cols)
         join_clauses.append(f"{join_type} JOIN read_parquet('{pattern}', union_by_name=true) AS {alias} ON {on_clause}")
 
@@ -106,4 +137,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
