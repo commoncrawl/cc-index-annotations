@@ -71,13 +71,68 @@ the join key) get `_leftN`/`_rightN` suffixes:
 ```bash
 python parquet_join.py \
   -o webgraph_gneissweb.parquet \
-  -j surt_host_name --how outer \
+  -j surt_host_name --how inner \
   ./webgraph/ \
   ./gneissweb/
 ```
 
 All parquet shards in each directory are concatenated automatically.
 Any overlapping non-join column names get `_leftN`/`_rightN` suffixes.
+
+Above annotation join result:
+```
+====================================================================================================
+File: webgraph_gneissweb.parquet
+Total rows: 7512652
+====================================================================================================
+
+Schema:
+root
+ |-- surt_host_name: string (nullable = true)
+ |-- webgraph_outdegree: long (nullable = true)
+ |-- webgraph_indegree: long (nullable = true)
+ |-- host_rev: string (nullable = true)
+ |-- gneissweb_technology: double (nullable = true)
+ |-- gneissweb_science: double (nullable = true)
+ |-- gneissweb_education: double (nullable = true)
+ |-- gneissweb_medical: double (nullable = true)
+ |-- in_gneissweb: boolean (nullable = true)
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+ROW 1
+────────────────────────────────────────────────────────────────────────────────────────────────────
+gneissweb_education: 0.5419631389280161
+gneissweb_medical: 0.06258945873317619
+gneissweb_science: 0.033660448951801904
+gneissweb_technology: 0.3591726745168368
+host_rev: abb.careers
+in_gneissweb: True
+surt_host_name: abb,careers
+webgraph_indegree: 665
+webgraph_outdegree: 19
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+ROW 2
+────────────────────────────────────────────────────────────────────────────────────────────────────
+gneissweb_education: 0.0035266188271634745
+gneissweb_medical: 0.10797339590644697
+gneissweb_science: 0.13446958106760576
+gneissweb_technology: 0.24355749068599836
+host_rev: abb.global
+in_gneissweb: True
+surt_host_name: abb,global
+webgraph_indegree: 2843
+webgraph_outdegree: 104
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+ROW 3
+────────────────────────────────────────────────────────────────────────────────────────────────────
+gneissweb_education: 0.03020171052776277
+gneissweb_medical: 0.13582982309162617
+[...]
+```
+
 
 ### Join with prefixes
 
