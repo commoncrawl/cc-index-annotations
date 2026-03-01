@@ -1,0 +1,11 @@
+sql: "
+SELECT
+  {columns}
+FROM joined
+WHERE {where}
+"
+
+columns: "surt_host_name, crawl, url, wikipedia_deprecated, wikipedia_generally_unreliable, wikipedia_generally_reliable"
+
+where: "wikipedia_list_japan = 1"
+

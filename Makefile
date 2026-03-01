@@ -1,6 +1,6 @@
 .PHONY: examples web-graph gneissweb wikipedia
 
-examples: web-graph gneissweb wikipedia web-graph-wikipedia
+examples: web-graph gneissweb wikipedia web-graph-wikipedia wikipedia-perennial
 
 web-graph: examples/web-graph/host-index-paths.gz examples/web-graph/web-graph-outin-paths.gz examples/web-graph/annotate.py
 
@@ -9,6 +9,15 @@ gneissweb: examples/gneissweb/host-index-paths.gz examples/gneissweb/paths.hosts
 wikipedia: examples/wikipedia/wikipedia-spam.txt examples/wikipedia/wikipedia-domains.parquet examples/wikipedia/wikipedia-perennial.json.txt examples/wikipedia/annotate.py examples/wikipedia/host-index-paths.gz
 
 web-graph-wikipedia: web-graph wikipedia examples/web-graph-wikipedia/annotate.py
+
+wikipedia-perennial: examples/wikipedia-perennial/wp_sources.parquet examples/wikipedia-perennial/annotate.py examples/wikipedia-perennial/host-index-paths.gz
+
+examples/wikipedia-perennial/host-index-paths.gz:
+	curl -L -o examples/wikipedia-perennial/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
+examples/wikipedia-perennial/annotate.py:
+	cd examples/wikipedia-perennial/; ln -s ../../*.py .
+examples/wikipedia-perennial/wp_sources.parquet:
+	cd examples/wikipedia-perennial/; python wp_sources_scraper.py
 
 examples/web-graph-wikipedia/annotate.py:
 	cd examples/web-graph-wikipedia/; ln -s ../../*.py .

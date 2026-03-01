@@ -1,0 +1,90 @@
+table:
+  local: ./
+
+limits:
+
+right_columns:
+- surt_host_name
+- host_name
+- url
+- wikipedia_source
+- wikipedia_source_name
+- wikipedia_status
+- wikipedia_generally_reliable
+- wikipedia_no_consensus
+- wikipedia_generally_unreliable
+- wikipedia_deprecated
+- wikipedia_blacklisted
+- wikipedia_list_rsp
+- wikipedia_list_rsp_x
+- wikipedia_list_rsp_further
+- wikipedia_list_deprecated
+- wikipedia_list_deprecated_domains
+- wikipedia_list_potentially_unreliable
+- wikipedia_list_ext_links
+- wikipedia_list_nppsg
+- wikipedia_list_suggested
+- wikipedia_list_genealogy
+- wikipedia_list_free_online
+- wikipedia_list_record_charts
+- wikipedia_list_sci_tech
+- wikipedia_list_south_african
+- wikipedia_list_vaccine
+- wikipedia_list_vaccine_perennial
+- wikipedia_list_korea
+- wikipedia_list_japan
+- wikipedia_list_africa
+- wikipedia_list_nigeria
+- wikipedia_list_philippines
+- wikipedia_list_india
+- wikipedia_list_malaysia
+- wikipedia_list_guyana
+- wikipedia_list_venezuela
+- wikipedia_list_peru
+- wikipedia_list_mongols
+- wikipedia_list_oregon
+- wikipedia_list_videogames
+- wikipedia_list_film
+- wikipedia_list_afrocine
+- wikipedia_list_music
+- wikipedia_list_music_about
+- wikipedia_list_christianmusic
+- wikipedia_list_latinmusic
+- wikipedia_list_songcontests
+- wikipedia_list_horror
+- wikipedia_list_television
+- wikipedia_list_westerns
+- wikipedia_list_anime
+- wikipedia_list_comics
+- wikipedia_list_scifi
+- wikipedia_list_webcomics
+- wikipedia_list_novels_fantasy
+- wikipedia_list_wrestling
+- wikipedia_list_percussion
+- wikipedia_list_beauty_pageants
+- wikipedia_list_dnd
+- wikipedia_list_board_games
+- wikipedia_list_conservatism
+- wikipedia_list_ice_hockey
+- wikipedia_list_cricket
+- wikipedia_list_college_football
+- wikipedia_list_arena_football
+- wikipedia_list_nba
+- wikipedia_list_baseball
+- wikipedia_list_motorsport
+- wikipedia_list_football_shef
+- wikipedia_list_medicine
+- wikipedia_list_economics
+- wikipedia_list_covid
+- wikipedia_list_math
+- wikipedia_list_aircraft_engines
+- wikipedia_list_weather
+- wikipedia_list_dogs
+- wikipedia_list_birds
+- wikipedia_list_lds
+- wikipedia_list_foss
+- wikipedia_list_timeline
+
+join_columns:
+- surt_host_name
+
