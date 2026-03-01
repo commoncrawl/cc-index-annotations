@@ -25,6 +25,7 @@ jobs:
       run: make examples
     
     - name: Test wikipedia-perennial example
+      run: |
         cd examples/wikipedia-perennial
         python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_japan.yaml 
         cd -
