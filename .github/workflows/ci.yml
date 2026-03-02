@@ -31,8 +31,8 @@ jobs:
         cd -
 
 
-    - name: Test combined wikipedia example
+    - name: Test wikipedia-spam example
       run: |
-        cd examples/wikipedia
-        python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_reliable.yaml 
+        cd examples/wikipedia-spam
+        python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_shortener.yaml 
         cd -
