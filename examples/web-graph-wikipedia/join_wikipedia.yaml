@@ -1,14 +1,12 @@
 table:
-  local: ../wikipedia/
+  local: ../wikipedia-spam/
 
 limits:
 
 #join_type: INNER
 
 right_columns:
-- wikipedia_deprecated
-- wikipedia_unreliable
-- wikipedia_reliable
+- wikipedia_shortener
 - wikipedia_spam
 
 join_columns:

@@ -42,9 +42,18 @@ def build_select(columns: list[str], alias: str, prefix: str | None, join_cols: 
 
 def build_join_key_select(join_cols: list[str], num_tables: int, how: str) -> list[str]:
     if how == "outer":
-        return [f'COALESCE({", ".join(f"t{i}.\"{c}\"" for i in range(num_tables))}) AS "{c}"'
-                for c in join_cols]
+        result = []
+        for c in join_cols:
+            parts = [f't{i}."{c}"' for i in range(num_tables)]
+            result.append(f'COALESCE({", ".join(parts)}) AS "{c}"')
+        return result
+
     return [f't0."{c}"' for c in join_cols]
+#def build_join_key_select(join_cols: list[str], num_tables: int, how: str) -> list[str]:
+#    if how == "outer":
+#        return [f'COALESCE({", ".join(f"t{i}.\"{c}\"" for i in range(num_tables))}) AS "{c}"'
+#                for c in join_cols]
+#    return [f't0."{c}"' for c in join_cols]
 
 
 def inspect(con: duckdb.DuckDBPyConnection, inputs: list[tuple]) -> None:
@@ -125,7 +134,17 @@ def main():
         on_clause = " AND ".join(f't0."{c}" = {alias}."{c}"' for c in on_cols)
         join_clauses.append(f"{join_type} JOIN read_parquet('{pattern}', union_by_name=true) AS {alias} ON {on_clause}")
 
-    sql = f"COPY (\n  SELECT {',\n         '.join(select_parts)}\n  FROM {from_clause}\n  {'  '.join(join_clauses)}\n) TO '{args.output}' (FORMAT PARQUET)"
+    select_sql = ",\n         ".join(select_parts)
+    joins_sql = "  ".join(join_clauses)
+
+    sql = (
+        "COPY (\n"
+        f"  SELECT {select_sql}\n"
+        f"  FROM {from_clause}\n"
+        f"  {joins_sql}\n"
+        f") TO '{args.output}' (FORMAT PARQUET)"
+    )
+    #sql = f"COPY (\n  SELECT {',\n         '.join(select_parts)}\n  FROM {from_clause}\n  {'  '.join(join_clauses)}\n) TO '{args.output}' (FORMAT PARQUET)"
 
     print(f"Executing join...", file=sys.stderr)
     con.execute(sql)

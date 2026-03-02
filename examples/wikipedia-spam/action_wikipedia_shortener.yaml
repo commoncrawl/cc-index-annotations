@@ -1,0 +1,11 @@
+sql: "
+SELECT
+  {columns}
+FROM joined
+WHERE {where}
+"
+
+columns: "surt_host_name, crawl, wikipedia_shortener"
+
+where: "wikipedia_shortener = 1 AND crawl = 'CC-MAIN-2021-49'"
+
