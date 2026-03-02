@@ -134,7 +134,17 @@ def main():
         on_clause = " AND ".join(f't0."{c}" = {alias}."{c}"' for c in on_cols)
         join_clauses.append(f"{join_type} JOIN read_parquet('{pattern}', union_by_name=true) AS {alias} ON {on_clause}")
 
-    sql = f"COPY (\n  SELECT {',\n         '.join(select_parts)}\n  FROM {from_clause}\n  {'  '.join(join_clauses)}\n) TO '{args.output}' (FORMAT PARQUET)"
+    select_sql = ",\n         ".join(select_parts)
+    joins_sql = "  ".join(join_clauses)
+
+    sql = (
+        "COPY (\n"
+        f"  SELECT {select_sql}\n"
+        f"  FROM {from_clause}\n"
+        f"  {joins_sql}\n"
+        f") TO '{args.output}' (FORMAT PARQUET)"
+    )
+    #sql = f"COPY (\n  SELECT {',\n         '.join(select_parts)}\n  FROM {from_clause}\n  {'  '.join(join_clauses)}\n) TO '{args.output}' (FORMAT PARQUET)"
 
     print(f"Executing join...", file=sys.stderr)
     con.execute(sql)
