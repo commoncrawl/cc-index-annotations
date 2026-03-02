@@ -83,7 +83,11 @@ def extract_domains(file_path):
                 continue
             
             domain_regex = line.split('#')[0].strip()
+
             if not domain_regex:
+                continue
+
+            if "/" in domain_regex:
                 continue
             
             for char_expanded in expand_chars(domain_regex):
