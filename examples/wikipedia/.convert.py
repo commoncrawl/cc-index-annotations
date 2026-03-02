@@ -2,7 +2,7 @@ import re
 import surt
 import pandas as pd
 
-debugging = False #when enabled, save .tsv files of intermediary and final stages
+debugging = True  #when enabled, save .tsv files of intermediary and final stages
 
 def expand_chars(s):
     pattern = r'(\w)\?'
@@ -115,7 +115,7 @@ def extract_domains(file_path):
                                     'surt_host_name': surt_host,
                                     'domain': d,
                                     'domain_regex': domain_regex,
-                                    'in_wikipedia_spamlist': 1
+                                    'wikipedia_spam': True
                                 })
                             except:
                                 pass
@@ -124,6 +124,13 @@ def extract_domains(file_path):
 print("Converting wikipedia-spam.txt to parquet...")
 domains = extract_domains('wikipedia-spam.txt')
 df = pd.DataFrame(domains)
+
+ool_cols = ["wikipedia_spam", "wikipedia_shortener"]
+for col in bool_cols:
+    df[col] = df[col].astype('boolean').fillna(False).astype(bool)
+
+df = df.sort_values("surt_host_name").reset_index(drop=True)
+
 df.to_parquet('wikipedia-spam.parquet', index=False)
 if debugging:
     df.to_csv('wikipedia-spam.tsv', sep='\t', index=False)
