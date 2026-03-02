@@ -76,9 +76,21 @@ def normalize_domain(regex):
 
 def extract_domains(file_path):
     domains = []
+    skip_section = False
     with open(file_path) as f:
         for line in f:
             line = line.strip()
+
+            if line == "# URL shorteners":
+                skip_section = True
+                continue
+            if line == "# end of URL shorteners":
+                skip_section = False
+                continue
+            if skip_section:
+                #print(f"Skipping {line}")
+                continue
+
             if not line or line.startswith('#'):
                 continue
             
@@ -87,7 +99,7 @@ def extract_domains(file_path):
             if not domain_regex:
                 continue
 
-            if "/" in domain_regex:
+            if "/" in domain_regex: #skip patterns that require a file path to not create false positives
                 continue
             
             for char_expanded in expand_chars(domain_regex):
@@ -102,9 +114,12 @@ def extract_domains(file_path):
                         # if '.' not in domain:  # If no TLD, add common ones
                         if domain.startswith('.') and domain.count('.') == 1: #skip tld matches
                             continue
-                        if '.' not in domain or domain.startswith('.'):
+                        if '.' not in domain: # or domain.startswith('.'):
                             for tld in ['com', 'net', 'org', 'info']:
                                 domains_to_process.append(f"{domain}.{tld}")
+                        # If it starts with dot but has more (like ".foo.bar"), strip leading dot
+                        elif domain.startswith('.'):
+                            domains_to_process.append(domain.lstrip('.'))
                         else:
                             domains_to_process.append(domain)
                         
