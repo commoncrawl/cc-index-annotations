@@ -34,7 +34,7 @@ examples/wikipedia-spam/annotate.py:
 examples/web-graph/host-index-paths.gz:
 	curl -L -o examples/web-graph/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
 examples/web-graph/web-graph-outin-paths.gz:
-	curl -L -o examples/web-graph/web-graph-outin-paths.gz  --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/webgraph-outin-testing/v1.paths.gz"
+	curl -L -o examples/web-graph/web-graph-outin-paths.gz  --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/webgraph-outin-testing/v2.paths.gz"
 examples/web-graph/annotate.py:
 	cd examples/web-graph/; ln -s ../../*.py .
 
