@@ -4,10 +4,8 @@ table:
 limits:
 
 right_columns:
-- wikipedia_deprecated
-- wikipedia_unreliable
-- wikipedia_reliable
 - wikipedia_spam
+- wikipedia_shortener
 
 join_columns:
 - surt_host_name
