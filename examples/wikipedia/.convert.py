@@ -74,77 +74,88 @@ def normalize_domain(regex):
     d = re.sub(r'\.$', '', d) 
     return d
 
+def _process_domain_line(line, is_shortener=False):
+    results = []
+    domain_regex = line.split('#')[0].strip()
+    if not domain_regex:
+        return results
+
+    if "/" in domain_regex:
+        return results
+
+    for char_expanded in expand_chars(domain_regex):
+        for opt_expanded in expand_optionals(char_expanded):
+            for expanded in expand_alternations(opt_expanded):
+                domain = normalize_domain(expanded)
+                if not domain or '(' in domain or '|' in domain or '{' in domain or '\\' in domain or '[' in domain:
+                    continue
+
+                domains_to_process = []
+                if domain.startswith('.') and domain.count('.') == 1:
+                    continue
+                if '.' not in domain:
+                    for tld in ['com', 'net', 'org', 'info']:
+                        domains_to_process.append(f"{domain}.{tld}")
+                elif domain.startswith('.'):
+                    domains_to_process.append(domain.lstrip('.'))
+                else:
+                    domains_to_process.append(domain)
+
+                for d in domains_to_process:
+                    if d.startswith('-') or d.startswith('.-') or d.endswith('-') or '.-' in d or '-.' in d:
+                        continue
+                    try:
+                        full_surt = surt.surt(f"http://{d}")
+                        surt_host = full_surt.split(')/')[0]
+                        entry = {
+                            'surt_host_name': surt_host,
+                            'domain': d,
+                            'domain_regex': domain_regex,
+                            'wikipedia_spam': True,
+                            'wikipedia_shortener': is_shortener,
+                        }
+                        results.append(entry)
+                    except:
+                        pass
+    return results
+
 def extract_domains(file_path):
     domains = []
-    skip_section = False
+    shortener_section = False
+    found_shortener_start = False
+    found_shortener_end = False
+
     with open(file_path) as f:
         for line in f:
             line = line.strip()
 
             if line == "# URL shorteners":
-                skip_section = True
+                shortener_section = True
+                found_shortener_start = True
                 continue
             if line == "# end of URL shorteners":
-                skip_section = False
-                continue
-            if skip_section:
-                #print(f"Skipping {line}")
+                shortener_section = False
+                found_shortener_end = True
                 continue
 
             if not line or line.startswith('#'):
                 continue
             
-            domain_regex = line.split('#')[0].strip()
+            domains.extend(_process_domain_line(line, is_shortener=shortener_section))
 
-            if not domain_regex:
-                continue
+    if not found_shortener_start or not found_shortener_end:
+        raise RuntimeError(
+            "Could not find URL shortener section delimiters in "
+            f"{file_path}. Expected '# URL shorteners' and '# end of URL shorteners'."
+        )
 
-            if "/" in domain_regex: #skip patterns that require a file path to not create false positives
-                continue
-            
-            for char_expanded in expand_chars(domain_regex):
-                for opt_expanded in expand_optionals(char_expanded):
-                    for expanded in expand_alternations(opt_expanded):
-                        domain = normalize_domain(expanded)
-                        if not domain or '(' in domain or '|' in domain or '{' in domain or '\\' in domain or '[' in domain:
-                            continue
-                        
-                        
-                        domains_to_process = []
-                        # if '.' not in domain:  # If no TLD, add common ones
-                        if domain.startswith('.') and domain.count('.') == 1: #skip tld matches
-                            continue
-                        if '.' not in domain: # or domain.startswith('.'):
-                            for tld in ['com', 'net', 'org', 'info']:
-                                domains_to_process.append(f"{domain}.{tld}")
-                        # If it starts with dot but has more (like ".foo.bar"), strip leading dot
-                        elif domain.startswith('.'):
-                            domains_to_process.append(domain.lstrip('.'))
-                        else:
-                            domains_to_process.append(domain)
-                        
-                        for d in domains_to_process:
-                            #if d.startswith('-') or d.startswith('.-'): # we dont want nonsensical domains that start with hyphen
-                            if d.startswith('-') or d.startswith('.-') or d.endswith('-') or '.-' in d or '-.' in d:
-                                continue
-                            try:
-                                full_surt = surt.surt(f"http://{d}")
-                                surt_host = full_surt.split(')/')[0]
-                                domains.append({
-                                    'surt_host_name': surt_host,
-                                    'domain': d,
-                                    'domain_regex': domain_regex,
-                                    'wikipedia_spam': True
-                                })
-                            except:
-                                pass
     return domains
 
 print("Converting wikipedia-spam.txt to parquet...")
 domains = extract_domains('wikipedia-spam.txt')
 df = pd.DataFrame(domains)
 
-ool_cols = ["wikipedia_spam", "wikipedia_shortener"]
+bool_cols = ["wikipedia_spam", "wikipedia_shortener"]
 for col in bool_cols:
     df[col] = df[col].astype('boolean').fillna(False).astype(bool)
 
