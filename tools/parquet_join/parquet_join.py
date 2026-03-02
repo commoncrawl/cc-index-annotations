@@ -42,9 +42,18 @@ def build_select(columns: list[str], alias: str, prefix: str | None, join_cols: 
 
 def build_join_key_select(join_cols: list[str], num_tables: int, how: str) -> list[str]:
     if how == "outer":
-        return [f'COALESCE({", ".join(f"t{i}.\"{c}\"" for i in range(num_tables))}) AS "{c}"'
-                for c in join_cols]
+        result = []
+        for c in join_cols:
+            parts = [f't{i}."{c}"' for i in range(num_tables)]
+            result.append(f'COALESCE({", ".join(parts)}) AS "{c}"')
+        return result
+
     return [f't0."{c}"' for c in join_cols]
+#def build_join_key_select(join_cols: list[str], num_tables: int, how: str) -> list[str]:
+#    if how == "outer":
+#        return [f'COALESCE({", ".join(f"t{i}.\"{c}\"" for i in range(num_tables))}) AS "{c}"'
+#                for c in join_cols]
+#    return [f't0."{c}"' for c in join_cols]
 
 
 def inspect(con: duckdb.DuckDBPyConnection, inputs: list[tuple]) -> None:
