@@ -160,6 +160,7 @@ Defines the SQL query to run against the final `joined` view.
 | `sql` | string | yes | SQL template. Use `{columns}` and `{where}` as placeholders |
 | `columns` | string | yes | Column list substituted into `{columns}` |
 | `where` | string | yes | WHERE clause substituted into `{where}`. Supports template variables (see below) |
+| `limits.count` | integer | optional | Maximum number of rows in the output. Appends `LIMIT N` to the query |
 | `argv.surt_host_name` | boolean | optional | If `true`, passthrough arguments are converted to SURT format before substitution |
 
 ### Template variables in `where`

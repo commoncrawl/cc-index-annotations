@@ -2,6 +2,7 @@ import sys
 import os.path
 import glob
 import gzip
+import re
 
 import yaml
 import duckdb
@@ -180,10 +181,17 @@ for argv in argvs:
         tld = argv.split(',', 1)[0]
         and_tld = f" AND url_host_tld = '{tld}'"
     
+    limits = action.get('limits', {}) or {}
+    limit_count = limits.get('count')
+
     sql = action['sql'].format(
         columns=action['columns'],
         where=action['where'].format(argv=argv, and_tld=and_tld, **arg_vars),
     )
+    if limit_count:
+        sql = re.sub(r'(?i)\s+LIMIT\s+\d+\s*;?\s*$', '', sql)
+        sql = sql.rstrip().rstrip(';')
+        sql += f'\nLIMIT {int(limit_count)}'
     if verbose:
         print('action sql is:\n')
         print(sql)
