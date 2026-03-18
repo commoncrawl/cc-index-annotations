@@ -1,4 +1,4 @@
-.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial
+.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse
 
 examples: web-graph gneissweb wikipedia-spam web-graph-wikipedia wikipedia-perennial
 
@@ -9,6 +9,8 @@ gneissweb: examples/gneissweb/host-index-paths.gz examples/gneissweb/paths.hosts
 wikipedia-spam: examples/wikipedia-spam/wikipedia-spam.txt examples/wikipedia-spam/wikipedia-spam.parquet examples/wikipedia-spam/annotate.py examples/wikipedia-spam/host-index-paths.gz
 
 web-graph-wikipedia: web-graph wikipedia-spam examples/web-graph-wikipedia/annotate.py
+
+spam-abuse: examples/spam-abuse/spam-abuse.parquet examples/spam-abuse/annotate.py examples/spam-abuse/host-index-paths.gz
 
 wikipedia-perennial: examples/wikipedia-perennial/wp_sources.parquet examples/wikipedia-perennial/annotate.py examples/wikipedia-perennial/host-index-paths.gz
 
@@ -54,3 +56,10 @@ examples/gneissweb/annotate.py:
 	cd examples/gneissweb/; ln -s ../../*.py .
 examples/gneissweb-url/annotate.py:
 	cd examples/gneissweb-url/; ln -s ../../*.py .
+
+examples/spam-abuse/spam-abuse.parquet:
+	cd examples/spam-abuse; python spam-abuse-fetch.py; cd -
+examples/spam-abuse/host-index-paths.gz:
+	curl -L -o examples/spam-abuse/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
+examples/spam-abuse/annotate.py:
+	cd examples/spam-abuse/; ln -s ../../*.py .
