@@ -1,25 +1,34 @@
-This example combines a broad university domain list with CWUR world rankings into a single [Common Crawl Annotation](https://github.com/commoncrawl/cc-index-annotations) file, enabling identification of educational institutions and their relative standing in Common Crawl data.
+This example identifies university domains in Common Crawl data using the Hipo community's university domain list (~10K domains worldwide).
+
+Optionally, CWUR world rankings can be added for the top 2000 universities.
 
 ## Sources
 
 | Source | URL | License | What it covers |
 |--------|-----|---------|----------------|
 | Hipo University Domains List | https://github.com/Hipo/university-domains-list | MIT | ~10,000 university domains worldwide with country info |
-| CWUR World University Rankings 2025 | https://cwur.org/2025.php | Fair use | Top 2000 universities ranked by education, employability, faculty, research |
+| CWUR World University Rankings 2025 | https://cwur.org/2025.php | Fair use | Top 2000 universities ranked (optional, see below) |
 
-## Output schema
+## Default output (Hipo only)
 
-The resulting `university-ranking.parquet` file has the following columns:
+By default, `university-ranking-fetch.py` fetches only the Hipo domain list. This is fast (a single JSON download) and produces a parquet with these columns:
 
 | Column | Type | Description |
 |--------|------|-------------|
 | `surt_host_name` | string | SURT-formatted hostname (join key) |
 | `domain` | string | Original domain |
-| `is_university` | bool | True if the domain appears in either source |
+| `is_university` | bool | Always true |
 | `in_hipo` | bool | Present in Hipo university domains list |
-| `in_cwur` | bool | Present in CWUR 2025 rankings |
-| `country` | string | Country (from Hipo, empty if CWUR-only) |
+| `country` | string | Country |
 | `university_name` | string | Institution name |
+
+## With CWUR rankings (optional)
+
+Pass `--include-cwur` to also scrape CWUR profiles (~1 hour with polite delays). This adds ranking columns to the parquet:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `in_cwur` | bool | Present in CWUR 2025 rankings |
 | `cwur_world_rank` | int | CWUR world rank (null if unranked) |
 | `cwur_national_rank` | int | CWUR national rank (null if unranked) |
 | `cwur_education_rank` | int | CWUR education rank (null if unranked) |
@@ -27,6 +36,8 @@ The resulting `university-ranking.parquet` file has the following columns:
 | `cwur_faculty_rank` | int | CWUR faculty rank (null if unranked) |
 | `cwur_research_rank` | int | CWUR research rank (null if unranked) |
 | `cwur_score` | float | CWUR overall score 0-100 (null if unranked) |
+
+To use these columns in queries, uncomment them in `join_university_ranking.yaml` and the action YAMLs.
 
 ## Example output
 
@@ -39,28 +50,26 @@ The resulting `university-ranking.parquet` file has the following columns:
 | Stanford University | stanford.edu | United States | 3 | 95.4 |
 | University of Cambridge | cam.ac.uk | United Kingdom | 4 | 94.1 |
 | University of Oxford | ox.ac.uk | United Kingdom | 5 | 93.8 |
-| Princeton University | princeton.edu | United States | 6 | 93.2 |
-| Columbia University | columbia.edu | United States | 7 | 92.5 |
-| University of Pennsylvania | upenn.edu | United States | 8 | 92.1 |
-| University of Chicago | uchicago.edu | United States | 9 | 91.7 |
-| Yale University | yale.edu | United States | 10 | 90.6 |
 
-*(Scores are illustrative — actual values depend on fetch date)*
+*(Only available after running with `--include-cwur`. Scores depend on fetch date.)*
 
 ## Usage
 
 ```bash
-# Generate the parquet (fetches Hipo JSON + scrapes 2000 CWUR profiles, ~1h with polite delays)
+# Default: Hipo university domains only (fast)
 python university-ranking-fetch.py
 
-# Top 25 ranked universities in a crawl
+# With CWUR rankings (slow, ~1h with polite delays)
+python university-ranking-fetch.py --include-cwur
+
+# All university domains in a crawl
+python annotate.py left_host_index.yaml join_university_ranking.yaml action_all_universities.yaml
+
+# Top 25 ranked universities in a crawl (requires --include-cwur)
 python annotate.py left_host_index.yaml join_university_ranking.yaml action_top_universities.yaml
 
 # Look up a specific university
 python annotate.py left_host_index.yaml join_university_ranking.yaml action_surt_host_name.yaml mit.edu
-
-# All university domains in a crawl
-python annotate.py left_host_index.yaml join_university_ranking.yaml action_all_universities.yaml
 ```
 
 ## Disclaimer
