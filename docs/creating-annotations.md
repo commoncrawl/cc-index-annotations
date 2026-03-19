@@ -75,6 +75,42 @@ for col in bool_columns:
 
 Include three YAML files so users can immediately query your annotation against Common Crawl's index. These are templates — users will adjust paths and filters to their needs.
 
+### Option A: Self-contained source YAML (simplest)
+
+If your data is hosted at a public URL (HTTP, S3, or even a raw CSV), you can create a single YAML that works as both data definition and join config. Users don't need to download anything — DuckDB fetches the data directly.
+
+```yaml
+# join_my_annotation.yaml — all a user needs
+table:
+  source:
+    url: https://your-server.com/my-annotation.parquet
+right_columns:
+  - your_column_a
+  - your_column_b
+join_columns:
+  - surt_host_name
+```
+
+This also works with CSV files:
+
+```yaml
+table:
+  source:
+    url: https://your-server.com/my-data.csv
+    format: csv
+    options:
+      header: true
+right_columns:
+  - score
+join_columns:
+  left: url_host_registered_domain
+  right: domain
+```
+
+### Option B: Local parquet with paths (traditional)
+
+For larger datasets or when users want local copies:
+
 ### left_host_index.yaml
 
 ```yaml
@@ -118,11 +154,12 @@ That last point matters: Common Crawl hosts the index, but your annotation repre
 
 ## Step 4: Distribute
 
-Options for distribution:
+Options for distribution, from simplest to most integrated:
 
+- **Share a YAML file** — host your data anywhere (HTTP server, GitHub releases, S3) and distribute a single `table.source` YAML. Users join it immediately without downloading anything
+- **Publish on GitHub** — for smaller datasets, include the parquet directly in a repository with YAML templates
+- **Host it yourself** — put the parquet on your own HTTP server or S3 bucket. Users can point `table.source`, `web_prefix`, or `s3_prefix` at your location
 - **Send it to Common Crawl** — contact Common Crawl to have your annotation hosted alongside the index for easy joining
-- **Host it yourself** — put the parquet on your own HTTP server or S3 bucket. Users can point `web_prefix` or `s3_prefix` at your location
-- **Publish on GitHub** — for smaller datasets, include the parquet directly in a repository
 
 ## Column naming conventions
 

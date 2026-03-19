@@ -1,0 +1,14 @@
+table:
+  source:
+    url: https://tranco-list.eu/download/L76X4/full
+    format: csv
+    options:
+      header: false
+      columns:
+        rank: INTEGER
+        domain: VARCHAR
+right_columns:
+- rank
+join_columns:
+  left: url_host_registered_domain
+  right: domain

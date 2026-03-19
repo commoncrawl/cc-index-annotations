@@ -18,14 +18,15 @@ Defines the "left" table — typically a Common Crawl host index or URL index.
 
 | Key | Type | Required | Description |
 |-----|------|----------|-------------|
-| `table.local` | string | one of three | Path to local directory containing `.parquet` files |
-| `table.web_prefix` | string | one of three | HTTP(S) URL prefix (e.g. `https://data.commoncrawl.org/`) |
-| `table.s3_prefix` | string | one of three | S3 URI prefix (e.g. `s3://commoncrawl/`) |
+| `table.local` | string | one of four | Path to local directory containing `.parquet` files |
+| `table.web_prefix` | string | one of four | HTTP(S) URL prefix (e.g. `https://data.commoncrawl.org/`) |
+| `table.s3_prefix` | string | one of four | S3 URI prefix (e.g. `s3://commoncrawl/`) |
+| `table.source` | dict | one of four | Direct URL to a CSV, parquet, or JSON file (see [Source YAML](#source-yaml) below) |
 | `table.paths` | string | required for web/s3 | Path to a file listing relative parquet paths. Supports `.gz` compressed files |
 | `limits.grep` | list of strings | optional | Keep only paths containing any of these substrings (OR logic) |
 | `limits.count` | integer | optional | Keep only the first N paths after grep filtering |
 
-Exactly one of `local`, `web_prefix`, or `s3_prefix` must be specified.
+Exactly one of `local`, `web_prefix`, `s3_prefix`, or `source` must be specified.
 
 When using `local` without `paths`, all `.parquet` files in the directory (and subdirectories) are auto-discovered.
 
@@ -72,7 +73,7 @@ Defines a right-side table to join against the left table (or a previous join re
 | `table.*` | | yes | Same `table` and `limits` options as Left YAML (see above) |
 | `limits.*` | | optional | Same `limits` options as Left YAML |
 | `right_columns` | list of strings | yes | Columns to select from the right table into the joined result |
-| `join_columns` | list of strings | yes | Column(s) to join on. Must exist in both left and right tables |
+| `join_columns` | list or dict | yes | Column(s) to join on. A list when names match in both tables, or a dict with `left`/`right` keys when column names differ (see examples) |
 | `join_type` | string | optional | `OUTER` (default) or `INNER` |
 
 `OUTER` produces a `LEFT OUTER JOIN` — rows in the left table without a match in the right table are kept, with NULLs for the right columns. `INNER` drops unmatched rows from both sides.
@@ -120,6 +121,50 @@ join_columns:
   - crawl
   - fetch_time
 ```
+
+```yaml
+# Asymmetric join — column names differ between left and right (single column)
+table:
+  local: ./
+right_columns:
+  - is_university
+  - country
+  - university_name
+join_columns:
+  left: url_host_registered_domain
+  right: domain
+```
+
+```yaml
+# Asymmetric join — multiple columns with different names
+table:
+  local: ./
+right_columns:
+  - score
+join_columns:
+  left: [url_host_registered_domain, crawl]
+  right: [domain, crawl_id]
+```
+
+### join_columns formats
+
+`join_columns` supports two formats:
+
+- **List** — when column names are the same in both tables:
+  ```yaml
+  join_columns:
+    - surt_host_name
+    - crawl
+  ```
+
+- **Dict with left/right** — when column names differ. Each side accepts a single string or a list. When using lists, columns are paired positionally:
+  ```yaml
+  join_columns:
+    left: [url_host_registered_domain, crawl]
+    right: [domain, crawl_id]
+  # produces: left.url_host_registered_domain = right.domain
+  #       AND left.crawl = right.crawl_id
+  ```
 
 ```yaml
 # INNER join (only keep matched rows)
@@ -212,6 +257,73 @@ sql: "SELECT {columns} FROM joined WHERE {where}"
 columns: "surt_host_name, crawl, abuse_urlhaus_malware, abuse_ut1_malware"
 where: "(abuse_urlhaus_malware = 1 OR abuse_ut1_malware = 1) AND crawl = 'CC-MAIN-2021-49'"
 ```
+
+---
+
+## Source YAML
+
+`table.source` is the simplest way to use an external dataset — point directly at a URL. The format (CSV, parquet, JSON) is auto-detected from the file extension, or set explicitly. Works in both left and join position based on argument order.
+
+This is the recommended method for distributing standalone annotations. A data provider can share a single YAML file and users can immediately join it against any Common Crawl index.
+
+### Keys
+
+| Key | Type | Required | Description |
+|-----|------|----------|-------------|
+| `table.source.url` | string | one of two | URL or local path to a single file |
+| `table.source.urls` | list | one of two | List of URLs/paths (loaded as a single table) |
+| `table.source.format` | string | optional | `csv`, `json`, or `parquet`. Auto-detected from extension if omitted |
+| `table.source.options` | dict | optional | Passed directly to DuckDB's `read_csv()`, `read_json()`, or `read_parquet()` |
+
+Auto-detection: `.csv`/`.tsv`/`.csv.gz` → csv, `.json`/`.jsonl`/`.ndjson` → json, everything else → parquet.
+
+### Examples
+
+```yaml
+# Tranco top-1M domain ranking (CSV without headers)
+table:
+  source:
+    url: https://tranco-list.eu/download/L76X4/full
+    format: csv
+    options:
+      header: false
+      columns:
+        rank: INTEGER
+        domain: VARCHAR
+
+right_columns:
+  - rank
+join_columns:
+  left: url_host_registered_domain
+  right: domain
+```
+
+```yaml
+# Local parquet file via source
+table:
+  source:
+    url: ./my-annotation.parquet
+
+right_columns:
+  - my_score
+join_columns:
+  - surt_host_name
+```
+
+```yaml
+# Multiple parquet files
+table:
+  source:
+    urls:
+      - https://example.com/data-part1.parquet
+      - https://example.com/data-part2.parquet
+```
+
+### Hive partitioning
+
+- Local and S3 globs work (`source.url: ./crawl=*/*.parquet`)
+- HTTP URLs cannot glob — use `source.urls` with explicit paths, or use `web_prefix` + `paths` for partitioned data
+- `table.source` is best for single-file datasets; use `web_prefix`/`s3_prefix` for multi-partition CC infrastructure data
 
 ---
 
