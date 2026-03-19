@@ -79,14 +79,20 @@ for idx, join_yaml in enumerate(join_yamls):
     right_view = f'right_db_{idx}'
     exec(f'{right_view} = duck_utils.db_config(config, verbose=verbose)')
     
-    rcols = ', '.join(f'{right_view}.{col}' for col in config['right_columns'])
+    prefix = config.get('prefix', '')
+    def q(col):
+        return f'"{col}"'
+    if prefix:
+        rcols = ', '.join(f'{right_view}.{q(col)} AS {q(prefix + col)}' for col in config['right_columns'])
+    else:
+        rcols = ', '.join(f'{right_view}.{q(col)}' for col in config['right_columns'])
     join_columns = config['join_columns']
     if isinstance(join_columns, dict):
         left_cols = join_columns['left'] if isinstance(join_columns['left'], list) else [join_columns['left']]
         right_cols = join_columns['right'] if isinstance(join_columns['right'], list) else [join_columns['right']]
-        jcols = ' AND '.join(f'{current_view}.{lc} = {right_view}.{rc}' for lc, rc in zip(left_cols, right_cols))
+        jcols = ' AND '.join(f'{current_view}.{q(lc)} = {right_view}.{q(rc)}' for lc, rc in zip(left_cols, right_cols))
     else:
-        jcols = ' AND '.join(f'{current_view}.{jc} = {right_view}.{jc}' for jc in join_columns)
+        jcols = ' AND '.join(f'{current_view}.{q(jc)} = {right_view}.{q(jc)}' for jc in join_columns)
     
     # Determine join type from YAML (default to LEFT OUTER for backward compatibility)
     join_type = config.get('join_type', 'OUTER').upper()
