@@ -42,14 +42,38 @@ def init_duckdb_httpfs(verbose=0):
         duckdb.sql("SET http_logging_output = './duckdb_http.log'")
 
 
+def detect_source_format(url):
+    lower = url.lower().split('?')[0]
+    if lower.endswith(('.csv', '.csv.gz', '.tsv', '.tsv.gz')):
+        return 'csv'
+    elif lower.endswith(('.json', '.jsonl', '.ndjson', '.json.gz')):
+        return 'json'
+    return 'parquet'
+
+
 def db_config(config, verbose=0):
     table = config['table']
+
+    # table.source: direct URL(s) to CSV/parquet/JSON — simplest distribution method
+    if 'source' in table:
+        src = table['source']
+        urls = src.get('urls') or [src['url']]
+        fmt = src.get('format', detect_source_format(urls[0]))
+        opts = src.get('options', {}) or {}
+        if verbose:
+            print(f'source: {fmt} from {urls[0]}' + (f' (+{len(urls)-1} more)' if len(urls) > 1 else ''))
+        if fmt == 'csv':
+            return duckdb.read_csv(urls if len(urls) > 1 else urls[0], **opts)
+        elif fmt == 'json':
+            return duckdb.read_json(urls if len(urls) > 1 else urls[0], **opts)
+        else:
+            return duckdb.read_parquet(urls if len(urls) > 1 else urls[0], hive_partitioning=True, **opts)
 
     count = ['local' in table, 'web_prefix' in table, 's3_prefix' in table].count(True)
     if count > 1:
         raise ValueError('can only have 1 of local, web_prefix, and s3_prefix')
     if count == 0:
-        raise ValueError('config needs 1 of local, web_prefix, or s3_prefix')
+        raise ValueError('config needs 1 of local, web_prefix, s3_prefix, or source')
 
     paths = None
     if 'paths' in table:

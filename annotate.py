@@ -80,7 +80,13 @@ for idx, join_yaml in enumerate(join_yamls):
     exec(f'{right_view} = duck_utils.db_config(config, verbose=verbose)')
     
     rcols = ', '.join(f'{right_view}.{col}' for col in config['right_columns'])
-    jcols = ' AND '.join(f'{current_view}.{jc} = {right_view}.{jc}' for jc in config['join_columns'])
+    join_columns = config['join_columns']
+    if isinstance(join_columns, dict):
+        left_cols = join_columns['left'] if isinstance(join_columns['left'], list) else [join_columns['left']]
+        right_cols = join_columns['right'] if isinstance(join_columns['right'], list) else [join_columns['right']]
+        jcols = ' AND '.join(f'{current_view}.{lc} = {right_view}.{rc}' for lc, rc in zip(left_cols, right_cols))
+    else:
+        jcols = ' AND '.join(f'{current_view}.{jc} = {right_view}.{jc}' for jc in join_columns)
     
     # Determine join type from YAML (default to LEFT OUTER for backward compatibility)
     join_type = config.get('join_type', 'OUTER').upper()

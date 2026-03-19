@@ -1,0 +1,3 @@
+table:
+  web_prefix: https://data.commoncrawl.org/
+  paths: host-index-paths.gz

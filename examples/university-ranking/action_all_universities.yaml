@@ -1,0 +1,3 @@
+sql: "SELECT {columns} FROM joined WHERE {where} ORDER BY surt_host_name ASC"
+columns: "surt_host_name, crawl, university_name, country, in_hipo, in_cwur, cwur_world_rank"
+where: "is_university = true AND crawl = 'CC-MAIN-2021-49'"

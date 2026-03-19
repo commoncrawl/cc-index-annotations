@@ -1,4 +1,4 @@
-.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse
+.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse university-ranking
 
 examples: web-graph gneissweb wikipedia-spam web-graph-wikipedia wikipedia-perennial
 
@@ -63,3 +63,12 @@ examples/spam-abuse/host-index-paths.gz:
 	curl -L -o examples/spam-abuse/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
 examples/spam-abuse/annotate.py:
 	cd examples/spam-abuse/; ln -s ../../*.py .
+
+university-ranking: examples/university-ranking/university-ranking.parquet examples/university-ranking/annotate.py examples/university-ranking/host-index-paths.gz
+
+examples/university-ranking/university-ranking.parquet:
+	cd examples/university-ranking; python university-ranking-fetch.py; cd -
+examples/university-ranking/host-index-paths.gz:
+	curl -L -o examples/university-ranking/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
+examples/university-ranking/annotate.py:
+	cd examples/university-ranking/; ln -s ../../*.py .

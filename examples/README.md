@@ -5,6 +5,7 @@
 | `gneissweb/` | host | Topic classification scores (technology, science, education, medical) |
 | `gneissweb-url/` | url | Same as gneissweb but at URL granularity |
 | `spam-abuse/` | host | Malware, phishing, and abuse flags from URLhaus, PhishTank, and UT1 |
+| `university-ranking/` | host | University identification (Hipo) and world rankings (CWUR 2025) |
 | `web-graph/` | host | Link metrics (outdegree, indegree) from Common Crawl's web graph |
 | `web-graph-wikipedia/` | host | Multi-join example combining web-graph + wikipedia-spam |
 | `wikipedia-perennial/` | host | Source reliability ratings from Wikipedia's perennial sources lists |
