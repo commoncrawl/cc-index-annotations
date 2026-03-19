@@ -130,6 +130,8 @@ export AWS_PROFILE=<profilename>
 
 ## Examples
 
+See [examples/README.md](examples/README.md) for a full directory listing of all available examples.
+
 Generate .csv file of `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webgraph_indegree`, for hosts matching given hostname 'commoncrawl.org':
 ```
 make web-graph
@@ -154,11 +156,11 @@ python annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_g
 cd -
 ```
 
-Generate .csv file of the `surt_host_name`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all gneissweb pages in a crawl with `gneissweb_medical` score higher than 50%
+Generate .csv file of the `url_surtkey`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all gneissweb URLs in a crawl with `gneissweb_medical` score higher than 50%
 ```
-make gneissweb
-cd examples/gneissweb
-python annotate.py left_web_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages.yaml
+make gneissweb-url
+cd examples/gneissweb-url
+python annotate.py left_web_url_index.yaml join_web_gneissweb_url.yaml action_gneissweb_medical_urls.yaml
 cd -
 ```
 
