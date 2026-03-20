@@ -74,6 +74,7 @@ Defines a right-side table to join against the left table (or a previous join re
 | `limits.*` | | optional | Same `limits` options as Left YAML |
 | `right_columns` | list of strings | yes | Columns to select from the right table into the joined result |
 | `join_columns` | list or dict | yes | Column(s) to join on. A list when names match in both tables, or a dict with `left`/`right` keys when column names differ (see examples) |
+| `prefix` | string | optional | Prefix added to all `right_columns` in the result (e.g. `tranco_` turns `rank` into `tranco_rank`). Useful when stacking multiple joins to avoid column name collisions |
 | `join_type` | string | optional | `OUTER` (default) or `INNER` |
 
 `OUTER` produces a `LEFT OUTER JOIN` — rows in the left table without a match in the right table are kept, with NULLs for the right columns. `INNER` drops unmatched rows from both sides.
@@ -165,6 +166,22 @@ join_columns:
   # produces: left.url_host_registered_domain = right.domain
   #       AND left.crawl = right.crawl_id
   ```
+
+```yaml
+# Prefix to avoid column collisions when stacking multiple joins
+table:
+  source:
+    url: https://downloads.majestic.com/majestic_million.csv
+    format: csv
+prefix: majestic_
+right_columns:
+  - GlobalRank
+  - RefSubNets
+join_columns:
+  left: url_host_registered_domain
+  right: Domain
+# Result columns: majestic_GlobalRank, majestic_RefSubNets
+```
 
 ```yaml
 # INNER join (only keep matched rows)
