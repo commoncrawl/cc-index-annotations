@@ -1,0 +1,17 @@
+# FineWeb-Edu Llama3 Annotations — educational quality scores from Llama3-70B-Instruct
+# https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu-llama3-annotations
+# License: ODC-By 1.0 (metadata), subject to Common Crawl Terms of Use
+# Citation: Lozhkov et al. "FineWeb-Edu" HuggingFace 2024
+#   https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu
+# Scores: 0 (not educational) to 5 (outstanding educational value)
+# Scored by: Llama3-70B-Instruct using additive 5-point rubric
+table:
+  local: ./
+
+right_columns:
+  - fineweb_edu_pages
+  - fineweb_edu_avg_score
+  - fineweb_edu_max_score
+  - fineweb_edu_avg_lang_score
+join_columns:
+  - surt_host_name

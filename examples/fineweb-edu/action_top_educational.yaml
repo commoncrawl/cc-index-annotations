@@ -1,0 +1,5 @@
+sql: "SELECT {columns} FROM joined WHERE {where} ORDER BY fineweb_edu_avg_score DESC"
+columns: "surt_host_name, crawl, fineweb_edu_pages, fineweb_edu_avg_score, fineweb_edu_max_score, fineweb_edu_avg_lang_score"
+where: "fineweb_edu_avg_score IS NOT NULL"
+limits:
+  count: 1000
