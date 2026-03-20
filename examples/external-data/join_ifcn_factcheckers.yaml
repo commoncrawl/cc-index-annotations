@@ -1,0 +1,19 @@
+# IFCN — International Fact-Checking Network verified signatories
+# https://ifcncodeofprinciples.poynter.org/signatories
+# https://github.com/IFCN/verified-signatories
+# License: not explicitly stated; public on GitHub
+table:
+  source:
+    url: https://raw.githubusercontent.com/IFCN/verified-signatories/main/list
+    format: csv
+    options:
+      header: false
+      columns:
+        domain: VARCHAR
+
+prefix: ifcn_
+right_columns:
+  - domain
+join_columns:
+  left: url_host_registered_domain
+  right: domain

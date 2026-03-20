@@ -1,0 +1,17 @@
+# Misinformation Domains — compiled from 13+ source lists (MBFC, Snopes, PolitiFact, etc.)
+# https://github.com/JanaLasser/misinformation_domains
+# License: CC BY-SA 4.0
+# Types: unreliable, fake, conspiracy, bias, satire, etc.
+table:
+  source:
+    url: https://raw.githubusercontent.com/JanaLasser/misinformation_domains/main/data/clean/domain_list_clean.csv
+    format: csv
+
+prefix: misinfo_
+right_columns:
+  - label
+  - source
+  - type
+join_columns:
+  left: url_host_registered_domain
+  right: url
