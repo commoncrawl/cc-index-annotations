@@ -6,7 +6,7 @@ import re
 import sys
 import time
 from html.parser import HTMLParser
-from urllib.parse import urlparse
+from urllib.parse import urlparse, quote
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
 from urllib.robotparser import RobotFileParser
@@ -14,7 +14,7 @@ from urllib.robotparser import RobotFileParser
 import pandas as pd
 import surt
 
-debugging = False
+debugging = True
 
 UA = "university-ranking-fetcher/1.0 (Common Crawl Foundation; https://github.com/commoncrawl/cc-index-annotations)"
 
@@ -118,30 +118,37 @@ class CWURProfileParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.fields = {}
-        self.capture_next = None
-        self.in_tag = False
+        self.in_td = False
+        self.tds = []
         self.current_text = ""
 
     def handle_starttag(self, tag, attrs):
-        self.in_tag = True
-        self.current_text = ""
+        if tag == "td":
+            self.in_td = True
+            self.current_text = ""
 
     def handle_endtag(self, tag):
-        self.in_tag = False
-        text = self.current_text.strip()
-        if text.startswith("Domain:"):
-            self.fields["domain"] = text.replace("Domain:", "").strip().lower()
-        for label in ["World Rank:", "National Rank:", "Education Rank:",
-                       "Employability Rank:", "Faculty Rank:", "Research Rank:",
-                       "Score:"]:
-            if text.startswith(label):
-                val = text.replace(label, "").strip()
-                val = val.split()[0].replace(",", "")
-                key = label.replace(":", "").strip().lower().replace(" ", "_")
-                self.fields[key] = val
+        if tag == "td":
+            self.in_td = False
+            self.tds.append(self.current_text.strip())
+        if tag == "tr" and len(self.tds) == 2:
+            label, val = self.tds[0], self.tds[1]
+            if label == "Domain":
+                self.fields["domain"] = val.lower().strip()
+            for key_label in ["World Rank", "National Rank", "Education Rank",
+                              "Employability Rank", "Faculty Rank", "Research Rank",
+                              "Score"]:
+                if label == key_label:
+                    clean = val.split()[0].replace(",", "") if val else ""
+                    key = key_label.lower().replace(" ", "_")
+                    self.fields[key] = clean
+            self.tds = []
+        elif tag == "tr":
+            self.tds = []
 
     def handle_data(self, data):
-        self.current_text += data
+        if self.in_td:
+            self.current_text += data
 
 
 # HIPO
@@ -177,8 +184,9 @@ def fetch_cwur_list():
 
 def fetch_cwur_profile(name, href):
     slug = href.replace("2025/", "").replace(".php", "")
-    filename = f"cwur_profile_{slug}.html"
-    url = f"{CWUR_BASE}/{href}"
+    safe_slug = re.sub(r'[^\w\-.]', '_', slug)
+    filename = f"cwur_profile_{safe_slug}.html"
+    url = f"{CWUR_BASE}/{quote(href, safe='/')}"
     data = fetch_cached(url, filename, sleep_after=SLEEP_BETWEEN)
     if not data:
         return None
@@ -195,6 +203,7 @@ def fetch_cwur_profiles(uni_links):
             print(f"  {i + 1}/{len(uni_links)}", file=sys.stderr)
         fields = fetch_cwur_profile(name, href)
         if fields and "domain" in fields:
+            print(f"  + {fields['domain']} ({name})", file=sys.stderr)
             fields["cwur_name"] = name
             profiles[fields["domain"]] = fields
     print(f"  -> {len(profiles)} profiles with domains", file=sys.stderr)
@@ -252,9 +261,14 @@ def build_dataframe(hipo, cwur):
 
 
 if __name__ == "__main__":
+    include_cwur = "--include-cwur" in sys.argv or "--get-ranking" in sys.argv
+
     hipo = fetch_hipo()
-    uni_links = fetch_cwur_list()
-    cwur = fetch_cwur_profiles(uni_links)
+
+    cwur = {}
+    if include_cwur:
+        uni_links = fetch_cwur_list()
+        cwur = fetch_cwur_profiles(uni_links)
 
     if not hipo and not cwur:
         print("ERROR: no sources fetched", file=sys.stderr)
