@@ -37,6 +37,18 @@ jobs:
         cd -
 
 
+    - name: Test university-ranking example
+      run: |
+        cd examples/university-ranking
+        python annotate.py left_host_index.yaml join_university_ranking.yaml action_all_universities.yaml
+        cd -
+
+    - name: Test wikipedia-categories example
+      run: |
+        cd examples/wikipedia/categories
+        python annotate.py left_host_index.yaml join_wikipedia_categories.yaml action_star.yaml
+        cd -
+
     - name: Test wikipedia-spam example
       run: |
         cd examples/wikipedia/spam

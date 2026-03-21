@@ -1,14 +1,15 @@
 table:
   local: ./
-  paths: university-ranking.parquet
+  paths: university-ranking*.parquet
 right_columns:
   - is_university
   - in_hipo
-  - in_cwur
   - country
   - university_name
-  - cwur_world_rank
-  - cwur_national_rank
-  - cwur_score
+  # uncomment below after running: python university-ranking-fetch.py --include-cwur
+  #- in_cwur
+  #- cwur_world_rank
+  #- cwur_national_rank
+  #- cwur_score
 join_columns:
   - surt_host_name
