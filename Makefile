@@ -110,7 +110,9 @@ examples/tranco-top1m/host-index-paths.gz:
 examples/tranco-top1m/annotate.py:
 	cd examples/tranco-top1m/; ln -s ../../*.py .
 
-university-ranking: examples/university-ranking/university-ranking.parquet examples/university-ranking/annotate.py examples/university-ranking/host-index-paths.gz examples/university-ranking-url/annotate.py examples/university-ranking-url/cc-index-table.paths.gz
+university-ranking: examples/university-ranking/university-ranking.parquet examples/university-ranking/annotate.py examples/university-ranking/host-index-paths.gz
+
+university-ranking-url: university-ranking examples/university-ranking-url/annotate.py examples/university-ranking-url/cc-index-table.paths.gz
 
 examples/university-ranking/university-ranking.parquet:
 	cd examples/university-ranking; python university-ranking-fetch.py; cd -

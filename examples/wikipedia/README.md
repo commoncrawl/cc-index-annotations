@@ -10,7 +10,8 @@ All data reflects the opinions of Wikipedia editors and contributors, not Common
 |-----------|-------------|---------|
 | `perennial/` | Source reliability ratings from English Wikipedia's Reliable Sources/Perennial list + international equivalents | ~1000+ |
 | `spam/` | Spam and URL shortener flags from English Wikipedia's spam blacklist | ~30K+ |
-| `categories/` | Website classification from Wikipedia article categories (fact-checking, fake news, satirical, holocaust denial, alt-right, disinformation) | ~159 |
+| `categories/` | Website classification from English Wikipedia article categories (fact-checking, fake news, satirical, holocaust denial, alt-right, disinformation) | ~159 |
+| `categories-intl/` | Same as categories but across all language Wikipedias via langlinks auto-discovery | ~500-2000 |
 
 ## International perennial sources
 

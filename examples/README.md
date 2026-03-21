@@ -14,7 +14,8 @@
 | `university-ranking-url/` | url | Same as university-ranking but at URL granularity |
 | `web-graph/` | host | Link metrics (outdegree, indegree) from Common Crawl's web graph |
 | `web-graph-wikipedia/` | host | Multi-join example combining web-graph + wikipedia-spam |
-| `wikipedia/categories/` | host | Website classification from Wikipedia categories (fact-checking, fake news, satirical, etc.) |
+| `wikipedia/categories/` | host | Website classification from English Wikipedia categories (fact-checking, fake news, satirical, etc.) |
+| `wikipedia/categories-intl/` | host | Same as categories but across all language Wikipedias via langlinks auto-discovery |
 | `wikipedia/perennial/` | host | Source reliability ratings from 10+ language Wikipedias |
 | `wikipedia/spam/` | host | Spam and URL shortener flags from Wikipedia's blacklist |
 
