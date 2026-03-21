@@ -53,6 +53,17 @@ python wikipedia-categories-fetch.py --deep
 python annotate.py left_host_index.yaml join_wikipedia_categories.yaml action_star.yaml
 ```
 
+## Fullest mode:
+A few categories were left out of deep mode, to enable all categories, also pass `--no-skip` to the fetch script
+
+At the time of writing, the number of sites the 3 modus result in:
+```
+  default (curated)  157 sites
+  + --deep         10332 sites
+  + --no-skip      10518 sites
+```
+
+
 ## Data source
 
 - Categories enumerated via [MediaWiki API](https://www.mediawiki.org/wiki/API:Categorymembers)
