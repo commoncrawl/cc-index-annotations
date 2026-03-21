@@ -1,6 +1,6 @@
-.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse university-ranking university-ranking-url tranco-top1m external-data fineweb-edu wikipedia-categories
+.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse university-ranking university-ranking-url tranco-top1m external-data fineweb-edu wikipedia-categories wikipedia-categories-intl
 
-examples: web-graph gneissweb wikipedia-spam web-graph-wikipedia wikipedia-perennial
+examples: web-graph gneissweb wikipedia-spam web-graph-wikipedia wikipedia-perennial wikipedia-categories university-ranking
 
 web-graph: examples/web-graph/host-index-paths.gz examples/web-graph/web-graph-outin-paths.gz examples/web-graph/annotate.py
 
@@ -84,6 +84,15 @@ examples/wikipedia/perennial/host-index-paths.gz:
 	curl -L -o examples/wikipedia/perennial/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
 examples/wikipedia/perennial/annotate.py:
 	cd examples/wikipedia/perennial/; ln -s ../../../*.py .
+
+wikipedia-categories-intl: examples/wikipedia/categories-intl/wikipedia-categories-intl.parquet examples/wikipedia/categories-intl/annotate.py examples/wikipedia/categories-intl/host-index-paths.gz
+
+examples/wikipedia/categories-intl/wikipedia-categories-intl.parquet:
+	cd examples/wikipedia/categories-intl; python3 wikipedia-categories-intl-fetch.py
+examples/wikipedia/categories-intl/host-index-paths.gz:
+	curl -L -o examples/wikipedia/categories-intl/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
+examples/wikipedia/categories-intl/annotate.py:
+	cd examples/wikipedia/categories-intl/; ln -s ../../../*.py .
 
 external-data: examples/external-data/annotate.py examples/external-data/host-index-paths.gz
 
