@@ -178,8 +178,13 @@ See the `examples/` directory for complete working annotations:
 
 - `web-graph/` — host-level link metrics (outdegree, indegree)
 - `gneissweb/` — host and URL-level topic classification scores
-- `wikipedia-spam/` — spam and shortener domain flags from Wikipedia
-- `wikipedia-perennial/` — source reliability classifications from Wikipedia
+- `wikipedia/spam/` — spam and shortener domain flags from Wikipedia
+- `wikipedia/perennial/` — source reliability ratings from 10 language Wikipedias
+- `wikipedia/categories/` — website classification from Wikipedia categories (fact-checking, fake news, etc.)
+- `wikipedia-perennial/` — English Wikipedia perennial sources (detailed RSP ratings)
 - `spam-abuse/` — combined malware, phishing, and abuse flags from public blocklists
+- `external-data/` — 6 ready-to-use external datasets via `table.source` (Tranco, Majestic, CISA, IFCN, etc.)
+- `university-ranking/` — university identification and world rankings
+- `fineweb-edu/` — educational quality scores from HuggingFace FineWeb-Edu
 
 For a complete reference of all YAML options, see [yaml-reference.md](yaml-reference.md).

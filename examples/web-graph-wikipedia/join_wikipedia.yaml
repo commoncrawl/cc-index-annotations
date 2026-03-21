@@ -1,5 +1,5 @@
 table:
-  local: ../wikipedia-spam/
+  local: ../wikipedia/spam/
 
 limits:
 

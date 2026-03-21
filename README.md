@@ -167,7 +167,7 @@ cd -
 Generate .csv file of all domains in a crawl that are marked 'shortener' in the wikipedia [Perennial sources spam list](https://en.wikipedia.org/wiki/Wikipedia:Reliable_sources/Perennial_sources)
 ```
 make wikipedia-spam
-cd examples/wikipedia-spam
+cd examples/wikipedia/spam
 python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_shortener.yaml
 cd -
 ```

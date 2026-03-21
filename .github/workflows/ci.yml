@@ -26,20 +26,20 @@ jobs:
     
     - name: Test wikipedia-perennial example
       run: |
-        cd examples/wikipedia-perennial
+        cd examples/wikipedia/perennial
         python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_japan.yaml 
         cd -
 
 
     - name: Test wikipedia-spam example
       run: |
-        cd examples/wikipedia-spam
+        cd examples/wikipedia/spam
         python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_shortener.yaml 
         cd -
 
     - name: Test tools/parquet_join
       run: |
         cd tools/parquet_join
-        python parquet_join.py -o joined_wikipedia.parquet -j surt_host_name ../../examples/wikipedia-spam/wikipedia-spam.parquet ../../examples/wikipedia-perennial/wp_sources.parquet
+        python parquet_join.py -o joined_wikipedia.parquet -j surt_host_name ../../examples/wikipedia/spam/wikipedia-spam.parquet ../../examples/wikipedia/perennial/wikipedia-perennial.parquet
         cd -
 
