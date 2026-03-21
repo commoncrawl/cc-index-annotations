@@ -1,0 +1,11 @@
+table:
+  local: ./
+
+right_columns:
+  - domain
+  - wiki_lang
+  - wiki_page
+  - source_name
+
+join_columns:
+  - surt_host_name
