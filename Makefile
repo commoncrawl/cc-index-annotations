@@ -12,7 +12,10 @@ web-graph-wikipedia: web-graph wikipedia-spam examples/web-graph-wikipedia/annot
 
 spam-abuse: examples/spam-abuse/spam-abuse.parquet examples/spam-abuse/annotate.py examples/spam-abuse/host-index-paths.gz
 
-wikipedia-perennial: examples/wikipedia/perennial/wikipedia-perennial.parquet examples/wikipedia/perennial/annotate.py examples/wikipedia/perennial/host-index-paths.gz
+wikipedia-perennial: examples/wikipedia/perennial/wp_sources.parquet examples/wikipedia/perennial/wikipedia-perennial.parquet examples/wikipedia/perennial/annotate.py examples/wikipedia/perennial/host-index-paths.gz
+
+examples/wikipedia/perennial/wp_sources.parquet:
+	cd examples/wikipedia/perennial; python3 wp_sources_scraper.py
 
 examples/web-graph-wikipedia/annotate.py:
 	cd examples/web-graph-wikipedia/; ln -s ../../*.py .
