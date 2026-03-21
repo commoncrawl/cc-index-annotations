@@ -1,6 +1,6 @@
 .PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse university-ranking university-ranking-url tranco-top1m external-data fineweb-edu wikipedia-categories wikipedia-categories-intl
 
-examples: web-graph gneissweb wikipedia-spam web-graph-wikipedia wikipedia-perennial wikipedia-categories university-ranking
+examples: web-graph gneissweb wikipedia-spam web-graph-wikipedia wikipedia-perennial university-ranking
 
 web-graph: examples/web-graph/host-index-paths.gz examples/web-graph/web-graph-outin-paths.gz examples/web-graph/annotate.py
 

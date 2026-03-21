@@ -18,6 +18,7 @@ CACHE_DIR = '.cache'
 DEBUG = '--debug' in sys.argv or '-d' in sys.argv
 DEEP = '--deep' in sys.argv
 NO_SKIP = '--no-skip' in sys.argv
+CI = '--ci' in sys.argv
 
 # CURATED CATEGORIES (default mode)
 CURATED_CATEGORIES = {
@@ -195,10 +196,15 @@ def url_to_domain(url):
 
 
 def main():
-    if DEEP:
+    cats_to_fetch = CURATED_CATEGORIES
+    if CI:
+        cats_to_fetch = {'fact_checking': CURATED_CATEGORIES['fact_checking']}
+        print('[ci] limited run: 1 category, max 50 articles')
+
+    if DEEP and not CI:
         print('[deep] recursively walking Wikipedia topic categories')
         all_articles = walk_category_tree(TOPIC_ROOT)
-        for cat_key, cat_title in CURATED_CATEGORIES.items():
+        for cat_key, cat_title in cats_to_fetch.items():
             pages, _ = get_category_members(cat_title)
             print(f'  + curated {cat_key}: {len(pages)} articles')
             for title in pages:
@@ -211,7 +217,7 @@ def main():
     else:
         print('[categories] fetching curated category members')
         all_articles = {}
-        for cat_key, cat_title in CURATED_CATEGORIES.items():
+        for cat_key, cat_title in cats_to_fetch.items():
             pages, _ = get_category_members(cat_title)
             print(f'  {cat_key}: {len(pages)} articles')
             for title in pages:
@@ -221,6 +227,8 @@ def main():
         all_topics = set(CURATED_CATEGORIES.keys())
 
     titles = sorted(all_articles.keys())
+    if CI:
+        titles = titles[:50]
     print(f'  -> {len(titles)} unique articles')
 
     print('[wikidata] fetching P856 official website URLs')

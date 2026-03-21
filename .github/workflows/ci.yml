@@ -43,6 +43,14 @@ jobs:
         python annotate.py left_host_index.yaml join_university_ranking.yaml action_all_universities.yaml
         cd -
 
+    - name: Build wikipedia-categories (CI mode)
+      run: |
+        cd examples/wikipedia/categories
+        ln -s ../../../*.py .
+        python wikipedia-categories-fetch.py --ci
+        curl -sL -o host-index-paths.gz "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
+        cd -
+
     - name: Test wikipedia-categories example
       run: |
         cd examples/wikipedia/categories
