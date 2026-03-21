@@ -1,5 +1,6 @@
 table:
   local: ./
+  paths: wp_sources*.parquet
 
 limits:
 

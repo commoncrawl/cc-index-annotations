@@ -1,5 +1,6 @@
 table:
   local: ./
+  paths: wikipedia-perennial*.parquet
 
 right_columns:
   - domain
