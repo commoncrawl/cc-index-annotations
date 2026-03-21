@@ -1,0 +1,15 @@
+table:
+  local: ./
+
+right_columns:
+  - wikipedia_article
+  - categories
+  - wikipedia_cat_fake_news
+  - wikipedia_cat_fact_checking
+  - wikipedia_cat_satirical
+  - wikipedia_cat_holocaust_denial
+  - wikipedia_cat_alt_right
+  - wikipedia_cat_disinformation
+
+join_columns:
+  - surt_host_name
