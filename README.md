@@ -104,6 +104,8 @@ virtual environment:
 pip install -r requirements.txt
 ```
 
+> **Windows users**: This project is developed and tested on macOS and Linux. On Windows, we recommend using [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) which provides a full Linux environment. Native Windows support is untested — path handling, symlinks, and Make may behave differently.
+
 Please note that to run the "web" or "s3" examples, you'll need to download some necessary
 'path.gz' files:
 
