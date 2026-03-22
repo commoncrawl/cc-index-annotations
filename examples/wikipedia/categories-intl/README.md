@@ -52,6 +52,12 @@ Recursively walks [Category:Websites by topic](https://en.wikipedia.org/wiki/Cat
 
 **Warning**: This can take more than 24 hours to complete. Progress is cached in `.cache/`, so it resumes where it left off if interrupted.
 
+You can gauge its process by keeping watch on the `.cache/` directory:
+```bash
+ls -lt .cache/qids_ro_* | head -5
+```
+
+
 ### Step by step, how to enable Deep mode:
 
 ```bash
