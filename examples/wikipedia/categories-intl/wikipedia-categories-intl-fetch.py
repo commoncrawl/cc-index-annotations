@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 import utils
 
 UA = 'CCIndexAnnotations/1.0 (https://github.com/commoncrawl/cc-index-annotations)'
-SLEEP_BETWEEN = 1.5
+SLEEP_BETWEEN = 0.5
 CACHE_DIR = '.cache'
 DEBUG = '--debug' in sys.argv or '-d' in sys.argv
 DEEP = '--deep' in sys.argv
@@ -46,30 +46,35 @@ SKIP_CATEGORIES = {
 }
 
 
-def fetch(url):
-    req = Request(url, headers={'User-Agent': UA})
+def fetch(url, post_data=None):
+    req = Request(url, headers={'User-Agent': UA}, data=post_data)
     for attempt in range(5):
         try:
-            return urlopen(req, timeout=60).read()
-        except (HTTPError, URLError, TimeoutError) as e:
+            return urlopen(req, timeout=120).read()
+        except (HTTPError, URLError, TimeoutError, OSError) as e:
             wait = (2 ** attempt) + random.random()
             print(f'  retry {attempt+1}/5 ({e}), waiting {wait:.1f}s')
             time.sleep(wait)
     return None
 
 
-def fetch_json(url):
-    data = fetch(url)
-    return json.loads(data) if data else None
+def fetch_json(url, post_data=None):
+    data = fetch(url, post_data)
+    if not data:
+        return None
+    try:
+        return json.loads(data)
+    except (json.JSONDecodeError, ValueError):
+        return None
 
 
-def fetch_cached(filename, url):
+def fetch_cached(filename, url, post_data=None):
     os.makedirs(CACHE_DIR, exist_ok=True)
     path = os.path.join(CACHE_DIR, filename)
     if os.path.exists(path):
         return json.loads(open(path, 'rb').read())
     time.sleep(SLEEP_BETWEEN)
-    data = fetch_json(url)
+    data = fetch_json(url, post_data)
     if data:
         with open(path, 'wb') as f:
             f.write(json.dumps(data).encode('utf-8'))
@@ -137,32 +142,37 @@ def walk_foreign_category(wiki, category, topic, max_depth=MAX_DEPTH):
     return list(set(all_pages))
 
 
+def _fetch_qids(wiki, batch, offset):
+    titles_str = '|'.join(t for t in batch)
+    safe_wiki = wiki.replace('.', '_')
+    filename = f'qids_{safe_wiki}_{offset}.json'
+    url = f'https://{wiki}/w/api.php'
+    post_body = f'action=query&titles={quote(titles_str, safe="|")}&prop=pageprops&ppprop=wikibase_item&format=json'
+    data = fetch_cached(filename, url, post_body.encode('utf-8'))
+    if not data:
+        return {}
+    qid_map = {}
+    for pid, page in data.get('query', {}).get('pages', {}).items():
+        qid = page.get('pageprops', {}).get('wikibase_item')
+        if qid:
+            qid_map[qid] = page['title']
+    return qid_map
+
+
 # WIKIDATA P856 — resolve article titles to domains (on any wiki)
 def get_wikidata_urls(wiki, titles):
     results = {}
     batch_size = 50
     for i in range(0, len(titles), batch_size):
         batch = titles[i:i+batch_size]
-        titles_str = '|'.join(quote(t, safe='') for t in batch)
-        url = (f'https://{wiki}/w/api.php?action=query'
-               f'&titles={titles_str}&prop=pageprops&ppprop=wikibase_item&format=json')
-        safe_wiki = wiki.replace('.', '_')
-        filename = f'qids_{safe_wiki}_{i}.json'
-        data = fetch_cached(filename, url)
-        if not data:
-            continue
-
-        qid_map = {}
-        for pid, page in data.get('query', {}).get('pages', {}).items():
-            qid = page.get('pageprops', {}).get('wikibase_item')
-            if qid:
-                qid_map[qid] = page['title']
+        qid_map = _fetch_qids(wiki, batch, i)
         if not qid_map:
             continue
 
         qids = '|'.join(qid_map.keys())
         wd_url = (f'https://www.wikidata.org/w/api.php?action=wbgetentities'
                    f'&ids={qids}&props=claims&format=json')
+        safe_wiki = wiki.replace('.', '_')
         filename2 = f'wikidata_{safe_wiki}_{i}.json'
         wd_data = fetch_cached(filename2, wd_url)
         if not wd_data:

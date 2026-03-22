@@ -12,7 +12,10 @@ Fetches 6 curated categories across all languages that have equivalents (~500-20
 # 1. From the project root, set up the example
 make wikipedia-categories-intl
 
-# 2. Run the query
+# 2. (optional), run the fetch script with deeper recursion (warning; runtime can exceed 24 hours to complete!)
+python wikipedia-categories-intl-fetch.py --deep
+
+# 3. Run the query
 cd examples/wikipedia/categories-intl
 python annotate.py left_host_index.yaml join_wikipedia_categories_intl.yaml action_star.yaml
 ```
@@ -47,7 +50,7 @@ These 6 columns are always present, even in deep mode.
 
 Recursively walks [Category:Websites by topic](https://en.wikipedia.org/wiki/Category:Websites_by_topic) — 80+ subcategories — then discovers international equivalents for each. News and educational categories exist in 25-30+ languages.
 
-**Warning**: This takes several hours. Progress is cached in `.cache/`, so it resumes where it left off if interrupted.
+**Warning**: This can take more than 24 hours to complete. Progress is cached in `.cache/`, so it resumes where it left off if interrupted.
 
 ### Step by step, how to enable Deep mode:
 
