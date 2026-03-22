@@ -54,7 +54,7 @@ Recursively walks [Category:Websites by topic](https://en.wikipedia.org/wiki/Cat
 
 You can gauge its process by keeping watch on the `.cache/` directory:
 ```bash
-ls -lt .cache/qids_ro_* | head -5
+find .cache/ | wc -l
 ```
 
 
