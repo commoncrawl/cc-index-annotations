@@ -1,4 +1,4 @@
-.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse university-ranking university-ranking-url tranco-top1m external-data fineweb-edu wikipedia-categories wikipedia-categories-intl
+.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse university-ranking university-ranking-url tranco-top1m external-data fineweb-edu wikipedia-categories wikipedia-categories-intl curlie
 
 examples: web-graph gneissweb wikipedia-spam web-graph-wikipedia wikipedia-perennial university-ranking
 
@@ -16,6 +16,17 @@ wikipedia-perennial: examples/wikipedia/perennial/wp_sources.parquet examples/wi
 
 examples/wikipedia/perennial/wp_sources.parquet:
 	cd examples/wikipedia/perennial; python3 wp_sources_scraper.py
+
+curlie: examples/curlie/curlie.parquet examples/curlie/annotate.py examples/curlie/host-index-paths.gz
+
+examples/curlie/curlie.parquet: examples/curlie/curlie-rdf-all.tar.gz
+	cd examples/curlie; tar xzf curlie-rdf-all.tar.gz; python3 curlie-convert.py; rm -rf curlie-rdf
+examples/curlie/curlie-rdf-all.tar.gz:
+	curl -L -o examples/curlie/curlie-rdf-all.tar.gz https://curlie.org/directory-dl
+examples/curlie/host-index-paths.gz:
+	curl -L -o examples/curlie/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
+examples/curlie/annotate.py:
+	cd examples/curlie/; ln -s ../../*.py .
 
 examples/web-graph-wikipedia/annotate.py:
 	cd examples/web-graph-wikipedia/; ln -s ../../*.py .

@@ -4,20 +4,21 @@
 
 | Directory | Level | Description |
 |-----------|-------|-------------|
+| `curlie/` | host | [Curlie.org](https://curlie.org/) human-edited web directory — 2.9M entries, 90+ languages, 770K categories |
 | `external-data/` | host | Ready-to-use external datasets — no fetch scripts needed (see below) |
-| `fineweb-edu/` | host | Educational quality scores from HuggingFace FineWeb-Edu (Llama3-70B rated, 0-5 scale) |
-| `gneissweb/` | host | Topic classification scores (technology, science, education, medical) |
-| `gneissweb-url/` | url | Same as gneissweb but at URL granularity |
-| `spam-abuse/` | host | Malware, phishing, and abuse flags from URLhaus, PhishTank, OpenPhish, and UT1 |
-| `tranco-top1m/` | host | Domain popularity ranking from Tranco (streams CSV via `table.source`) |
-| `university-ranking/` | host | University identification (Hipo) and world rankings (CWUR 2025) |
-| `university-ranking-url/` | url | Same as university-ranking but at URL granularity |
-| `web-graph/` | host | Link metrics (outdegree, indegree) from Common Crawl's web graph |
+| `fineweb-edu/` | host | Educational quality scores from [HuggingFace FineWeb-Edu](https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu) (Llama3-70B rated, 0-5 scale) |
+| `gneissweb/` | host | [Data Prep Kit](https://github.com/data-prep-kit/data-prep-kit/tree/dev)'s Gneissweb topic classification scores (technology, science, education, medical) |
+| `gneissweb-url/` | url | Same as gneissweb above, but at URL granularity |
+| `spam-abuse/` | host | Malware, phishing, and abuse flags from [URLhaus](https://urlhaus.abuse.ch/), [PhishTank](https://phishtank.org/phish_archive.php?page=1), [OpenPhish](https://openphish.com/), and [UT1](https://dsi.ut-capitole.fr/blacklists/index_en.php) |
+| `tranco-top1m/` | host | Domain popularity ranking from [Tranco](https://tranco-list.eu/) |
+| `university-ranking/` | host | University identification ([Hipo](https://github.com/hipo/university-domains-list)) and world rankings ([CWUR 2025](https://cwur.org/2025.php)) |
+| `university-ranking-url/` | url | Same as university-ranking above but at URL granularity |
+| `web-graph/` | host | Link metrics (outdegree, indegree) from Common Crawl's [Web Graphs](https://commoncrawl.org/web-graphs) |
 | `web-graph-wikipedia/` | host | Multi-join example combining web-graph + wikipedia-spam |
-| `wikipedia/categories/` | host | Website classification from English Wikipedia categories (fact-checking, fake news, satirical, etc.) |
-| `wikipedia/categories-intl/` | host | Same as categories but across all language Wikipedias via langlinks auto-discovery |
-| `wikipedia/perennial/` | host | Source reliability ratings from 10+ language Wikipedias |
-| `wikipedia/spam/` | host | Spam and URL shortener flags from Wikipedia's blacklist |
+| `wikipedia/categories/` | host | Website classification from English [Wikipedia](https://en.wikipedia.org/) categories (fact-checking, fake news, satirical, etc.) |
+| `wikipedia/categories-intl/` | host | Same as categories but across all language Wikipedias via [langlinks](https://www.mediawiki.org/wiki/API:Langlinks) auto-discovery |
+| `wikipedia/perennial/` | host | Wikipedia's [Reliable Sources](https://en.wikipedia.org/wiki/Wikipedia:Reliable_sources/Perennial_sources) |
+| `wikipedia/spam/` | host | Spam and URL shortener flags from [Wikipedia's spam list](https://en.wikipedia.org/wiki/MediaWiki:Spam-blacklist) |
 
 ## External data sources (`external-data/`)
 

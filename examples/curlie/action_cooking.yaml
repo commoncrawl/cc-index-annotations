@@ -1,0 +1,4 @@
+# Example: find all cooking/food sites across all languages in a crawl
+sql: "SELECT DISTINCT {columns} FROM joined WHERE {where}"
+columns: "surt_host_name, domain, lang, category"
+where: "category LIKE '%Cooking%' OR category LIKE '%Kochen%' OR category LIKE '%Cuisine%' OR category LIKE '%Cucina%' OR category LIKE '%料理%'"

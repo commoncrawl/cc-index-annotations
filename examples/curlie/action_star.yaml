@@ -1,0 +1,5 @@
+sql: "SELECT {columns} FROM joined WHERE {where}"
+columns: "*"
+where: "category IS NOT NULL"
+limits:
+  count: 100
