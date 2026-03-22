@@ -18,7 +18,7 @@ Defines the "left" table — typically a Common Crawl host index or URL index.
 
 | Key | Type | Required | Description |
 |-----|------|----------|-------------|
-| `table.local` | string | one of four | Path to local directory containing `.parquet` files |
+| `table.local` | string | one of four | Path to a local `.parquet` file, a directory containing `.parquet` files, or a glob pattern (e.g. `./data-*.parquet`) |
 | `table.web_prefix` | string | one of four | HTTP(S) URL prefix (e.g. `https://data.commoncrawl.org/`) |
 | `table.s3_prefix` | string | one of four | S3 URI prefix (e.g. `s3://commoncrawl/`) |
 | `table.source` | dict | one of four | Direct URL to a CSV, parquet, or JSON file (see [Source YAML](#source-yaml) below) |
@@ -28,17 +28,32 @@ Defines the "left" table — typically a Common Crawl host index or URL index.
 
 Exactly one of `local`, `web_prefix`, `s3_prefix`, or `source` must be specified.
 
-When using `local` without `paths`, all `.parquet` files in the directory (and subdirectories) are auto-discovered.
+When using `local` without `paths`:
+- If it points to a **file**, that file is used directly
+- If it points to a **directory**, all `.parquet` files in it (and subdirectories) are auto-discovered
+- If it contains **glob characters** (`*`, `?`), the pattern is expanded
 
 ### Examples
 
 ```yaml
-# Local filesystem
+# Local directory — auto-discovers all .parquet files
 table:
   local: /home/cc-pds/commoncrawl/projects/host-index-testing/v2/
 limits:
   grep: ["CC-MAIN-2025", "CC-MAIN-2024"]
   count: 1
+```
+
+```yaml
+# Local file — single parquet
+table:
+  local: ./curlie.parquet
+```
+
+```yaml
+# Local glob pattern
+table:
+  local: ./data-*.parquet
 ```
 
 ```yaml
