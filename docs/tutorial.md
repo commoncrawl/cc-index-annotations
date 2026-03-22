@@ -189,7 +189,7 @@ join_columns:
 
 ### The Left YAML — points at Common Crawl's index
 
-This is usually the same across all annotations:
+This is usually the same across all annotations and points to either the Common Crawl's host, or page, index:
 
 ```yaml
 # left_host_index.yaml
