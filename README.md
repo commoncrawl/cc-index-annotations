@@ -74,7 +74,8 @@ of the index, annotation, and query are all contained in yaml
 files. The index and annotation can be on local disk or on AWS.
 
 For a complete reference of all YAML configuration options, see [docs/yaml-reference.md](docs/yaml-reference.md).
-If you'd like to create and distribute your own annotation, see [docs/creating-annotations.md](docs/creating-annotations.md).
+New to annotations? Follow the [in-depth tutorial](docs/tutorial.md) to build one from scratch.
+For a quick overview of creating and distributing your own annotation, see the [quickstart guide](docs/creating-annotations.md).
 
 In the following example, the index is our host index, and the
 annotation is taken from our web graph, and contains the columns

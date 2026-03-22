@@ -1,8 +1,8 @@
-# Creating Your Own Annotation
+# Creating Your Own Annotation — Quickstart
 
 Have a dataset that classifies, scores, or labels web domains or URLs? You can distribute it as a Common Crawl annotation — a parquet file that anyone can join against Common Crawl's indexes to selectively extract crawl data.
 
-This guide walks you through packaging your data and providing the YAML templates that let others use it.
+This guide walks you through packaging your data and providing the YAML templates that let others use it. For a hands-on walkthrough building an annotation from scratch (using the Curlie web directory as an example), see the [in-depth tutorial](tutorial.md).
 
 ## What makes a good annotation?
 
