@@ -153,14 +153,13 @@ for url, domain in rows:
 con.execute("CREATE TABLE surt_lookup (url VARCHAR, surt_host_name VARCHAR, url_surtkey VARCHAR)")
 con.executemany("INSERT INTO surt_lookup VALUES (?, ?, ?)", surt_data)
 
-result = con.sql("""
-    SELECT s.surt_host_name, s.url_surtkey, e.category_path as category
-    FROM sites e JOIN surt_lookup s ON e.url = s.url
-    ORDER BY s.surt_host_name
+con.sql("""
+    COPY (
+        SELECT s.surt_host_name, s.url_surtkey, e.category_path as category
+        FROM sites e JOIN surt_lookup s ON e.url = s.url
+        ORDER BY s.surt_host_name
+    ) TO 'curlie.parquet' (FORMAT PARQUET)
 """)
-
-import pyarrow.parquet as pq
-pq.write_table(result.fetch_arrow_table(), 'curlie.parquet')
 ```
 
 The real script also extracts languages, validates domains, and handles edge cases — but this is the core idea: **read the source data → add SURT columns → write parquet**.
