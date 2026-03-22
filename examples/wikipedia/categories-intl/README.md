@@ -84,7 +84,17 @@ Use `--deep --no-skip` to also include broad categories (blogs, social networkin
 | Source | English Wikipedia only | All language Wikipedias |
 | Discovery | Direct category enumeration | langlinks auto-discovery |
 | Unique angle | English-centric depth | International breadth |
-| Use together? | Yes — different domains |  |
+| Use together? (*)| Yes — different domains |  |
+
+(*) `categories/`(English-only) and `categories-intl/` (all other languages) cover different sets of domains with minimal overlap, so you can stack both join YAMLs in one query to get broader coverage. Like:
+```bash
+python annotate.py left_host_index.yaml \
+  join_wikipedia_categories.yaml \
+  join_wikipedia_categories_intl.yaml \
+  action_star.yaml
+```
+A site might appear in English Wikipedia's "Fake news websites" category AND in Russian Wikipedia's equivalent — so by joining them you'd get both labels.
+
 
 ## Data source
 
