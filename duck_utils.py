@@ -90,10 +90,14 @@ def db_config(config, verbose=0):
     if 'local' in table:
         if not paths:
             path = table['local'].rstrip('/')
-            if os.path.isdir(path):
+            if os.path.isfile(path):
+                paths = [path]
+            elif os.path.isdir(path):
                 paths = glob.glob(path + '/*.parquet') + glob.glob(path + '/**/*.parquet')
+            elif '*' in path or '?' in path:
+                paths = glob.glob(path)
             else:
-                raise NotImplementedError('local needs to be a directory if you do not specify paths')
+                raise NotImplementedError(f'local path not found: {path}')
     elif 'web_prefix' in table:
         paths = [(table['web_prefix'].rstrip('/') + '/' + p.rstrip()) for p in paths]
     elif 's3_prefix' in table:
