@@ -1,0 +1,13 @@
+# Curlie.org — the largest human-edited directory of the web (2.9M entries)
+# https://curlie.org/
+# License: Curlie Open Source License (see Curlie-License.txt in download)
+# Download: https://curlie.org/directory-dl
+table:
+  local: ./curlie.parquet
+
+right_columns:
+  - domain
+  - lang
+  - category
+join_columns:
+  - surt_host_name

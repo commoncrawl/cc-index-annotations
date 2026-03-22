@@ -1,0 +1,3 @@
+sql: "SELECT {columns} FROM joined WHERE {where}"
+columns: "surt_host_name, crawl, domain, wiki_lang, source_name"
+where: "domain IS NOT NULL"

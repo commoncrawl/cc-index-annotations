@@ -1,0 +1,18 @@
+# Majestic Million — top 1M domains by referring subnets
+# https://majestic.com/reports/majestic-million
+# License: CC BY 3.0
+# Download: https://downloads.majestic.com/majestic_million.csv
+table:
+  source:
+    url: https://downloads.majestic.com/majestic_million.csv
+    format: csv
+
+prefix: majestic_
+right_columns:
+  - GlobalRank
+  - TldRank
+  - RefSubNets
+  - RefIPs
+join_columns:
+  left: url_host_registered_domain
+  right: Domain

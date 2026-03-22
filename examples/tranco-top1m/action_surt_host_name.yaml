@@ -1,0 +1,5 @@
+sql: "SELECT {columns} FROM joined WHERE {where} ORDER BY crawl ASC"
+columns: "surt_host_name, crawl, rank"
+where: "surt_host_name LIKE '{argv}%'{and_tld}"
+argv:
+  surt_host_name: true

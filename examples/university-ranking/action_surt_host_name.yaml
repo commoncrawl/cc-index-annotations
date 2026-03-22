@@ -1,0 +1,7 @@
+sql: "SELECT {columns} FROM joined WHERE {where} ORDER BY crawl ASC"
+columns: "surt_host_name, crawl, university_name, country, is_university, in_hipo"
+# uncomment below after running: python university-ranking-fetch.py --include-cwur
+#columns: "surt_host_name, crawl, university_name, country, is_university, in_hipo, in_cwur, cwur_world_rank, cwur_score"
+where: "surt_host_name = '{argv}'{and_tld}"
+argv:
+  surt_host_name: true

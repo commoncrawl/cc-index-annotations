@@ -1,0 +1,7 @@
+table:
+  web_prefix: https://data.commoncrawl.org/
+  paths: cc-index-table.paths.gz
+
+limits:
+  grep: ["subset=warc"]
+  #count: 1

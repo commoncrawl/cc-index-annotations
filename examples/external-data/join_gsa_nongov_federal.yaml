@@ -1,0 +1,15 @@
+# GSA Non-.gov Federal Domains — US federal government domains NOT on .gov/.mil TLDs
+# https://github.com/GSA/govt-urls
+# License: Public domain (US government work)
+table:
+  source:
+    url: https://raw.githubusercontent.com/GSA/govt-urls/main/2_govt_urls_federal_only.csv
+    format: csv
+
+prefix: gsa_
+right_columns:
+  - Federal Agency
+  - Level of Government
+join_columns:
+  left: url_host_registered_domain
+  right: Domain

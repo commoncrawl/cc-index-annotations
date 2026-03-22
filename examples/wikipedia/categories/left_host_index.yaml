@@ -1,0 +1,7 @@
+table:
+  web_prefix: https://data.commoncrawl.org/
+  paths: host-index-paths.gz
+
+limits:
+  grep: [CC-MAIN-2024-51]
+  #count: 1

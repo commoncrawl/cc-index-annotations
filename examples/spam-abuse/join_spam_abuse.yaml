@@ -1,0 +1,11 @@
+table:
+  local: ./
+right_columns:
+  - abuse_urlhaus_malware
+  - abuse_phishtank_phishing
+  - abuse_ut1_malware
+  - abuse_ut1_phishing
+  - abuse_ut1_ddos
+  - abuse_ut1_cryptojacking
+join_columns:
+  - surt_host_name

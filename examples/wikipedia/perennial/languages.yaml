@@ -1,0 +1,73 @@
+# Wikipedia perennial/reliable source pages by language
+# parser types: source_ods (French template), wikitext_table, rsp (English)
+# domain_pattern: regex to extract domains from wikitext
+# rating_keywords: map local terms to standardized ratings
+
+en:
+  wiki: en.wikipedia.org
+  note: Uses existing wp_sources_scraper.py (complex multi-page RSP format)
+  standalone: true
+
+fr:
+  wiki: fr.wikipedia.org
+  pages:
+    - title: "Wikipédia:Observatoire des sources"
+  parser: source_ods
+  domain_pattern: 'Utilisations domaine\|([^}]+)'
+
+zh:
+  wiki: zh.wikipedia.org
+  pages:
+    - title: "Wikipedia:可靠来源/常见有争议来源列表"
+  parser: wikitext_table
+  note: Large (228KB), formal rating system with color codes
+
+ru:
+  wiki: ru.wikipedia.org
+  pages:
+    - title: "Википедия:Часто используемые источники"
+    - title: "Википедия:Нежелательные источники"
+  parser: wikitext_table
+
+vi:
+  wiki: vi.wikipedia.org
+  pages:
+    - title: "Wikipedia:Danh sách nguồn đáng tin cậy"
+  parser: wikitext_table
+
+tr:
+  wiki: tr.wikipedia.org
+  pages:
+    - title: "Vikipedi:Güvenilir kaynaklar/Mütemadi kaynaklar"
+  parser: wikitext_table
+
+uk:
+  wiki: uk.wikipedia.org
+  pages:
+    - title: "Вікіпедія:Список оцінених джерел"
+  parser: wikitext_table
+
+id:
+  wiki: id.wikipedia.org
+  pages:
+    - title: "Wikipedia:Sumber tepercaya/Observatorium sumber/Daftar"
+  parser: wikitext_table
+
+ko:
+  wiki: ko.wikipedia.org
+  pages:
+    - title: "위키백과:신뢰할 수 있는 출처 목록"
+  parser: wikitext_table
+
+sv:
+  wiki: sv.wikipedia.org
+  pages:
+    - title: "Wikipedia:Trovärdiga källor/Bedömningar"
+  parser: wikitext_table
+
+pt:
+  wiki: pt.wikipedia.org
+  pages:
+    - title: "Wikipédia:Fontes não confiáveis/Lista"
+    - title: "Wikipédia:Lista de fontes confiáveis"
+  parser: wikitext_table

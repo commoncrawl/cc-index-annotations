@@ -6,6 +6,8 @@ limits:
   #grep: [CC-MAIN-2021]
   #count: 3
 
+join_type: INNER
+
 right_columns:
 - gneissweb_technology
 - gneissweb_science

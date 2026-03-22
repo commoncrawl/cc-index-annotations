@@ -1,0 +1,71 @@
+table:
+  local: ./
+  paths: wikipedia-categories-intl*.parquet
+
+right_columns:
+  - wiki_langs
+  - wikipedia_article
+  - categories
+  - wikipedia_cat_fake_news
+  - wikipedia_cat_fact_checking
+  - wikipedia_cat_satirical
+  - wikipedia_cat_holocaust_denial
+  - wikipedia_cat_alt_right
+  - wikipedia_cat_disinformation
+  # uncomment below after running: python wikipedia-categories-intl-fetch.py --deep
+  # topic categories (80+)
+  #- wikipedia_cat_3d_printing
+  #- wikipedia_cat_agricultural
+  #- wikipedia_cat_animal
+  #- wikipedia_cat_automotive
+  #- wikipedia_cat_cannabis
+  #- wikipedia_cat_children's
+  #- wikipedia_cat_community
+  #- wikipedia_cat_conspiracist
+  #- wikipedia_cat_debate
+  #- wikipedia_cat_disability
+  #- wikipedia_cat_download
+  #- wikipedia_cat_e-commerce
+  #- wikipedia_cat_economics
+  #- wikipedia_cat_educational
+  #- wikipedia_cat_employment
+  #- wikipedia_cat_entertainment
+  #- wikipedia_cat_environmental
+  #- wikipedia_cat_fashion
+  #- wikipedia_cat_file_sharing
+  #- wikipedia_cat_fundraising
+  #- wikipedia_cat_genealogy
+  #- wikipedia_cat_health
+  #- wikipedia_cat_history
+  #- wikipedia_cat_law_enforcement
+  #- wikipedia_cat_legal
+  #- wikipedia_cat_lgbtq-related
+  #- wikipedia_cat_lifestyle
+  #- wikipedia_cat_linguistics
+  #- wikipedia_cat_literature
+  #- wikipedia_cat_news
+  #- wikipedia_cat_philosophy
+  #- wikipedia_cat_photography
+  #- wikipedia_cat_political
+  #- wikipedia_cat_reference
+  #- wikipedia_cat_religious
+  #- wikipedia_cat_review
+  #- wikipedia_cat_science
+  #- wikipedia_cat_science_fiction
+  #- wikipedia_cat_sport
+  #- wikipedia_cat_technology
+  #- wikipedia_cat_travel
+  # skipped by default (use --no-skip to include)
+  #- wikipedia_cat_blogs
+  #- wikipedia_cat_digital_marketing
+  #- wikipedia_cat_internet_streaming
+  #- wikipedia_cat_online_dating
+  #- wikipedia_cat_online_marketplaces
+  #- wikipedia_cat_social_networking
+  #- wikipedia_cat_video_hosting
+  #- wikipedia_cat_web_directories
+  #- wikipedia_cat_webmail
+  #- wikipedia_cat_wikis
+
+join_columns:
+  - surt_host_name

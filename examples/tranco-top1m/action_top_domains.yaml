@@ -1,0 +1,5 @@
+sql: "SELECT {columns} FROM joined WHERE {where} ORDER BY rank ASC"
+columns: "surt_host_name, crawl, rank"
+where: "rank IS NOT NULL"
+limits:
+  count: 100

@@ -6,6 +6,8 @@ limits:
   grep: [CC-MAIN-2020-05]
   #count: 1
 
+join_type: INNER
+
 right_columns:
 - gneissweb_technology
 - gneissweb_science

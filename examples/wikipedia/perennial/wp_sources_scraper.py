@@ -12,13 +12,13 @@ from urllib.parse import quote
 
 UA = "WPSourcesScraper/1.0 (research; contact@example.com)"
 
-# ── Pages to scrape ──────────────────────────────────────────────────────────
+# SOURCES
 PAGES = {
-    # ── Main RSP table (subpages 1-9 + X) ────────────────────────────────
+    # Main RSP table (subpages 1-9 + X) 
     "rsp": [f"Wikipedia:Reliable_sources/Perennial_sources/{i}" for i in range(1, 10)],
     "rsp_x": ["Wikipedia:Reliable_sources/Perennial_sources/X"],
     "rsp_further": ["Wikipedia:Reliable_sources/Perennial_sources/Further_classification"],
-    # ── Core Wikipedia-wide lists ─────────────────────────────────────────
+    # Core 
     "deprecated": ["Wikipedia:Deprecated_sources"],
     "deprecated_domains": ["Wikipedia:Deprecated_sources/Domains"],
     "potentially_unreliable": ["Wikipedia:Potentially_unreliable_sources"],
@@ -32,7 +32,7 @@ PAGES = {
     "south_african": ["Wikipedia:Reliable_South_African_Sources"],
     "vaccine": ["Wikipedia:Vaccine_safety/Sources"],
     "vaccine_perennial": ["Wikipedia:Vaccine_safety/Perennial_sources"],
-    # ── Regional / country WikiProjects ───────────────────────────────────
+    # Regional 
     "korea": ["Wikipedia:WikiProject_Korea/Reliable_sources"],
     "japan": ["Wikipedia:WikiProject_Japan/Reliable_sources"],
     "africa": ["Wikipedia:WikiProject_Africa/Africa_Sources_List"],
@@ -45,7 +45,7 @@ PAGES = {
     "peru": ["Wikipedia:WikiProject_Peru/Reliable_and_unreliable_sources"],
     "mongols": ["Wikipedia:WikiProject_Mongols/Reliable_sources"],
     "oregon": ["Wikipedia:WikiProject_Oregon/Reference_desk"],
-    # ── Entertainment / media WikiProjects ─────────────────────────────────
+    # Entertainment 
     "videogames": ["Wikipedia:WikiProject_Video_games/Sources"],
     "film": ["Wikipedia:WikiProject_Film/Resources"],
     "afrocine": ["Wikipedia:WikiProject_AfroCine/Reliable_Sources"],
@@ -68,7 +68,7 @@ PAGES = {
     "dnd": ["Wikipedia:WikiProject_Dungeons_&_Dragons/References"],
     "board_games": ["Wikipedia:WikiProject_Board_and_table_games/Sources"],
     "conservatism": ["Wikipedia:WikiProject_Conservatism/References"],
-    # ── Sports WikiProjects ───────────────────────────────────────────────
+    # Sports WikiProjects 
     "ice_hockey": ["Wikipedia:WikiProject_Ice_Hockey/Sources"],
     "cricket": ["Wikipedia:WikiProject_Cricket/Sources"],
     "college_football": ["Wikipedia:WikiProject_College_football/Reliable_sources"],
@@ -77,14 +77,14 @@ PAGES = {
     "baseball": ["Wikipedia:WikiProject_Baseball/Resource_library"],
     "motorsport": ["Wikipedia:WikiProject_Motorsport/Sources"],
     "football_shef": ["Wikipedia:WikiProject_Football/Sheffield_Wednesday_task_force/Sources"],
-    # ── Science / academic WikiProjects ────────────────────────────────────
+    # Science 
     "medicine": ["Wikipedia:WikiProject_Medicine/Reliable_sources"],
     "economics": ["Wikipedia:WikiProject_Economics/Reliable_sources_and_weight"],
     "covid": ["Wikipedia:WikiProject_COVID-19/Reference_sources"],
     "math": ["Wikipedia:WikiProject_Mathematics/Reference_resources"],
     "aircraft_engines": ["Wikipedia:WikiProject_Aircraft/Engines/Reference_sources"],
     "weather": ["Wikipedia:WikiProject_Weather/Sources"],
-    # ── Other WikiProjects ────────────────────────────────────────────────
+    # Other 
     "dogs": ["Wikipedia:WikiProject_Dogs/Reliable_sources"],
     "birds": ["Wikipedia:WikiProject_Birds/References"],
     "lds": ["Wikipedia:WikiProject_Latter_Day_Saint_movement/Sources"],
@@ -137,7 +137,7 @@ def extract_domains(text: str) -> list:
     )))
 
 
-# ── RSP parser ──────────────────────────────────────────────────────────────
+# PARSER
 # Actual row format (from WP:RSP/Instructions):
 #   |- class="s-gr" id="Source_Name"
 #   | data-sort-value="..." | Source Name {{small|(...)}}
@@ -204,7 +204,7 @@ def parse_rsp(wikitext: str) -> list:
     return rows
 
 
-# ── Generic wiki table parser ────────────────────────────────────────────────
+# WIKI TABLE PARSER
 def parse_wiki_table(wikitext: str) -> list:
     rows = []
     tables = re.findall(r'\{\|.*?\|\}', wikitext, re.S)
@@ -246,7 +246,7 @@ def parse_wiki_table(wikitext: str) -> list:
     return rows
 
 
-# ── Bullet list parser ───────────────────────────────────────────────────────
+# LIST PARSER
 def parse_bullets(wikitext: str, default_status: str = "unknown") -> list:
     rows = []
     for m in re.finditer(r'^\*+\s*(.+)', wikitext, re.M):
@@ -274,7 +274,7 @@ def parse_bullets(wikitext: str, default_status: str = "unknown") -> list:
     return rows
 
 
-# ── SURT conversion ──────────────────────────────────────────────────────────
+# TO SURT
 def to_surt(host: str) -> str:
     """Convert host to SURT format: 'www.dailymail.co.uk' -> 'uk,co,dailymail'."""
     if not host:
@@ -288,7 +288,7 @@ def to_surt(host: str) -> str:
     return ",".join(parts)
 
 
-# ── Status columns ───────────────────────────────────────────────────────────
+# STATUS
 STATUS_COLS = [
     "wikipedia_generally_reliable",
     "wikipedia_no_consensus",
@@ -309,7 +309,7 @@ STATUS_TO_COL = {
 LIST_COLS = [f"wikipedia_list_{lid}" for lid in PAGES.keys()]
 
 
-# ── Main ─────────────────────────────────────────────────────────────────────
+# MAIN
 def scrape_all() -> list:
     """Fetch and parse all pages, return raw entry dicts."""
     all_rows = []

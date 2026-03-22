@@ -1,0 +1,5 @@
+sql: "SELECT {columns} FROM joined WHERE {where} ORDER BY tranco_rank DESC"
+columns: "*"
+where: "1=1 AND crawl = 'CC-MAIN-2023-23' AND tranco_rank > 0"
+limits: 
+  count: 10000

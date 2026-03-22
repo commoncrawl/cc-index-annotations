@@ -73,6 +73,10 @@ runs a query, and saves the output to a csv file. The configuration
 of the index, annotation, and query are all contained in yaml
 files. The index and annotation can be on local disk or on AWS.
 
+For a complete reference of all YAML configuration options, see [docs/yaml-reference.md](docs/yaml-reference.md).
+New to annotations? Follow the [in-depth tutorial](docs/tutorial.md) to build one from scratch.
+For a quick overview of creating and distributing your own annotation, see the [quickstart guide](docs/creating-annotations.md).
+
 In the following example, the index is our host index, and the
 annotation is taken from our web graph, and contains the columns
 `surt_host_name`, `webgraph_outdegree`, and `webgraph_indegree`.
@@ -101,6 +105,8 @@ virtual environment:
 pip install -r requirements.txt
 ```
 
+> **Windows users**: This project is developed and tested on macOS and Linux. On Windows, we recommend using [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) which provides a full Linux environment. Native Windows support is untested — path handling, symlinks, and Make may behave differently.
+
 Please note that to run the "web" or "s3" examples, you'll need to download some necessary
 'path.gz' files:
 
@@ -127,6 +133,8 @@ export AWS_PROFILE=<profilename>
 
 ## Examples
 
+See [examples/README.md](examples/README.md) for a full directory listing of all available examples.
+
 Generate .csv file of `crawl`, `hcrank10` score, `webgraph_outdegree`, and `webgraph_indegree`, for hosts matching given hostname 'commoncrawl.org':
 ```
 make web-graph
@@ -151,18 +159,18 @@ python annotate.py left_web_host_index.yaml join_s3_gneissweb_host.yaml action_g
 cd -
 ```
 
-Generate .csv file of the `surt_host_name`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all gneissweb pages in a crawl with `gneissweb_medical` score higher than 50%
+Generate .csv file of the `url_surtkey`, `crawl`, `gneissweb_technology`, `gneissweb_science`, `gneissweb_education`, `gneissweb_medical` for all gneissweb URLs in a crawl with `gneissweb_medical` score higher than 50%
 ```
-make gneissweb
-cd examples/gneissweb
-python annotate.py left_web_page_index.yaml join_s3_gneissweb_page.yaml action_gneissweb_medical_pages.yaml
+make gneissweb-url
+cd examples/gneissweb-url
+python annotate.py left_web_url_index.yaml join_web_gneissweb_url.yaml action_gneissweb_medical_urls.yaml
 cd -
 ```
 
 Generate .csv file of all domains in a crawl that are marked 'shortener' in the wikipedia [Perennial sources spam list](https://en.wikipedia.org/wiki/Wikipedia:Reliable_sources/Perennial_sources)
 ```
 make wikipedia-spam
-cd examples/wikipedia-spam
+cd examples/wikipedia/spam
 python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_shortener.yaml
 cd -
 ```

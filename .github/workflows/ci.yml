@@ -24,22 +24,48 @@ jobs:
     - name: Run make examples
       run: make examples
     
-    - name: Test wikipedia-perennial example
+    - name: Test wikipedia-perennial example (English)
       run: |
-        cd examples/wikipedia-perennial
-        python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_japan.yaml 
+        cd examples/wikipedia/perennial
+        python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_japan.yaml
+        cd -
+
+    - name: Test wikipedia-perennial example (multilingual)
+      run: |
+        cd examples/wikipedia/perennial
+        python annotate.py left_host_index.yaml join_wikipedia_perennial.yaml action_star.yaml
         cd -
 
 
+    - name: Test university-ranking example
+      run: |
+        cd examples/university-ranking
+        python annotate.py left_host_index.yaml join_university_ranking.yaml action_all_universities.yaml
+        cd -
+
+    - name: Build wikipedia-categories (CI mode)
+      run: |
+        cd examples/wikipedia/categories
+        ln -s ../../../*.py .
+        python wikipedia-categories-fetch.py --ci
+        curl -sL -o host-index-paths.gz "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
+        cd -
+
+    - name: Test wikipedia-categories example
+      run: |
+        cd examples/wikipedia/categories
+        python annotate.py left_host_index.yaml join_wikipedia_categories.yaml action_star.yaml
+        cd -
+
     - name: Test wikipedia-spam example
       run: |
-        cd examples/wikipedia-spam
+        cd examples/wikipedia/spam
         python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_shortener.yaml 
         cd -
 
     - name: Test tools/parquet_join
       run: |
         cd tools/parquet_join
-        python parquet_join.py -o joined_wikipedia.parquet -j surt_host_name ../../examples/wikipedia-spam/wikipedia-spam.parquet ../../examples/wikipedia-perennial/wp_sources.parquet
+        python parquet_join.py -o joined_wikipedia.parquet -j surt_host_name ../../examples/wikipedia/spam/wikipedia-spam.parquet ../../examples/wikipedia/perennial/wikipedia-perennial.parquet
         cd -
 

@@ -1,0 +1,15 @@
+table:
+  local: ./
+right_columns:
+  - is_university
+  - in_hipo
+  - country
+  - university_name
+  # uncomment below after running: python university-ranking-fetch.py --include-cwur
+  #- in_cwur
+  #- cwur_world_rank
+  #- cwur_national_rank
+  #- cwur_score
+join_columns:
+  left: url_host_registered_domain
+  right: domain

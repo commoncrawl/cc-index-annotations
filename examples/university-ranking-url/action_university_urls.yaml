@@ -1,0 +1,3 @@
+sql: "SELECT {columns} FROM joined WHERE {where}"
+columns: "url_surtkey, url_host_registered_domain, crawl, fetch_time, warc_filename, university_name, country"
+where: "is_university = true"

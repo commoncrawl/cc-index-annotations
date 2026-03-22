@@ -1,0 +1,3 @@
+sql: "SELECT {columns} FROM joined WHERE {where}"
+columns: "surt_host_name, crawl, abuse_phishtank_phishing, abuse_ut1_phishing"
+where: "(abuse_phishtank_phishing = 1 OR abuse_ut1_phishing = 1) AND crawl = 'CC-MAIN-2021-49'"

@@ -1,0 +1,20 @@
+# CISA .gov domains — US federal, state, tribal, county, and city government domains
+# https://github.com/cisagov/dotgov-data
+# License: Public domain (US government work)
+# Download: https://raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv
+table:
+  source:
+    url: https://raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv
+    format: csv
+
+prefix: cisa_
+join_type: OUTER
+
+right_columns:
+  - Domain type
+  - Organization name
+  - City
+  - State
+join_columns:
+  left: url_host_registered_domain
+  right: Domain name
