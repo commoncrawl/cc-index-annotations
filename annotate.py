@@ -125,49 +125,6 @@ FROM {current_view}
     # Update current_view for next iteration
     current_view = next_view
 
-# Load all join table YAMLs and perform joins
-#current_view = 'left_db'
-#for idx, join_yaml in enumerate(join_yamls):
-#    with open(join_yaml, 'r', encoding='utf8') as fd:
-#        config = yaml.safe_load(fd)
-#
-#    print(f"right db config: {config}")
-#    right_db = duck_utils.db_config(config, verbose=verbose)
-#
-#    rcols = ', '.join(config['right_columns'])
-#    jcols = ' AND '.join(f'{current_view}.{jc} = right_db.{jc}' for jc in config['join_columns'])
-#    
-#    # Determine join type from YAML (default to LEFT OUTER for backward compatibility)
-#    join_type = config.get('join_type', 'OUTER').upper()
-#    if join_type == 'INNER':
-#        join_clause = 'INNER JOIN'
-#    elif join_type == 'OUTER':
-#        join_clause = 'LEFT OUTER JOIN'
-#    else:
-#        raise ValueError(f"Invalid join_type '{join_type}'. Must be 'INNER' or 'OUTER'")
-#
-#    # Create intermediate view for chaining
-#    next_view = 'joined' if idx == len(join_yamls) - 1 else f'join_step_{idx}'
-#    
-#    view_sql = '''\
-#CREATE OR REPLACE VIEW {next_view} AS
-#SELECT *,
-#  {rcols}
-#FROM {current_view}
-#{join_clause} right_db
-#  ON ({jcols})
-#'''
-#
-#    sql = view_sql.format(next_view=next_view, current_view=current_view, rcols=rcols, jcols=jcols, join_clause=join_clause)
-#    if verbose:
-#        print('view sql is:\n')
-#        print(sql)
-#
-#    duckdb.sql(sql)
-#    
-#    # Update current_view for next iteration
-#    current_view = next_view
-
 # Load action configuration (if exists)
 if action_yaml:
     with open(action_yaml, 'r', encoding='utf8') as fd:
