@@ -47,8 +47,8 @@ jobs:
       run: |
         cd examples/wikipedia/categories
         ln -s ../../../*.py .
+        ln -sf ../../../shared/host-index-paths.gz .
         python wikipedia-categories-fetch.py --ci
-        curl -sL -o host-index-paths.gz "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
         cd -
 
     - name: Test wikipedia-categories example
@@ -67,8 +67,8 @@ jobs:
       run: |
         cd examples/slashtag
         ln -s ../../*.py .
+        ln -sf ../../shared/host-index-paths.gz .
         python3 slashtag-convert.py
-        curl -sL -o host-index-paths.gz "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
         cd -
 
     - name: Test slashtag example
