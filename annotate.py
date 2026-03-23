@@ -6,7 +6,6 @@ import re
 
 import yaml
 import duckdb
-import pyarrow.csv as csv
 
 import utils
 import duck_utils
@@ -165,14 +164,13 @@ for argv in argvs:
         print('action sql is:\n')
         print(sql)
 
-    table = duckdb.sql(sql).fetch_arrow_table()
+    result = duckdb.sql(sql)
     if verbose:
-        print('result is', table.num_rows, 'rows')
+        print('result is', result.shape[0], 'rows')
 
     if isinstance(argv, str):
         filename = argv + '.csv' if argv else 'output.csv'
         print('writing', filename)
-        with open(filename, 'wb') as fd:
-            csv.write_csv(table, fd)
+        duckdb.sql(f"COPY ({sql}) TO '{filename}' (FORMAT CSV, HEADER)")
     else:
-        csv.write_csv(table, sys.stdout.buffer)
+        duckdb.sql(f"COPY ({sql}) TO '/dev/stdout' (FORMAT CSV, HEADER)")
