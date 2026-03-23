@@ -63,6 +63,20 @@ jobs:
         python annotate.py left_host_index.yaml join_wikipedia.yaml action_wikipedia_shortener.yaml 
         cd -
 
+    - name: Build slashtag example
+      run: |
+        cd examples/slashtag
+        ln -s ../../*.py .
+        python3 slashtag-convert.py
+        curl -sL -o host-index-paths.gz "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
+        cd -
+
+    - name: Test slashtag example
+      run: |
+        cd examples/slashtag
+        python annotate.py left_host_index.yaml join_slashtag.yaml action_star.yaml
+        cd -
+
     - name: Test tools/parquet_join
       run: |
         cd tools/parquet_join

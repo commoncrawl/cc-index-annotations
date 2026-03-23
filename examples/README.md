@@ -5,6 +5,8 @@
 | Directory | Level | Description |
 |-----------|-------|-------------|
 | `curlie/` | host | [Curlie.org](https://curlie.org/) human-edited web directory — 2.9M entries, 90+ languages, 770K categories |
+| `slashtag/` | host | [blekko](https://github.com/blekko/slashtag-data) human-curated topic categories — 120K+ domains, 1,280 tags |
+| `slashtag-url/` | url | Same as slashtag but at URL granularity |
 | `external-data/` | host | Ready-to-use external datasets — no fetch scripts needed (see below) |
 | `fineweb-edu/` | host | Educational quality scores from [HuggingFace FineWeb-Edu](https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu) (Llama3-70B rated, 0-5 scale) |
 | `gneissweb/` | host | [Data Prep Kit](https://github.com/data-prep-kit/data-prep-kit/tree/dev)'s Gneissweb topic classification scores (technology, science, education, medical) |

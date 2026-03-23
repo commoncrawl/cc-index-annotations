@@ -1,0 +1,11 @@
+# Slashtag data (blekko) — human-curated topic categories for 120K+ domains
+# https://github.com/blekko/slashtag-data
+# categories column is a LIST — use list_contains(categories, 'news') for exact matching
+table:
+  local: ./slashtag-hosts.parquet
+
+right_columns:
+  - domain
+  - categories
+join_columns:
+  - surt_host_name

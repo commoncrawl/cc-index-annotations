@@ -1,4 +1,4 @@
-.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse university-ranking university-ranking-url tranco-top1m external-data fineweb-edu wikipedia-categories wikipedia-categories-intl curlie
+.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse university-ranking university-ranking-url tranco-top1m external-data fineweb-edu wikipedia-categories wikipedia-categories-intl curlie slashtag
 
 examples: web-graph gneissweb wikipedia-spam web-graph-wikipedia wikipedia-perennial university-ranking
 
@@ -27,6 +27,22 @@ examples/curlie/host-index-paths.gz:
 	curl -L -o examples/curlie/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
 examples/curlie/annotate.py:
 	cd examples/curlie/; ln -s ../../*.py .
+
+slashtag: examples/slashtag/slashtag.parquet examples/slashtag/annotate.py examples/slashtag/host-index-paths.gz
+
+examples/slashtag/slashtag.parquet:
+	cd examples/slashtag; python3 slashtag-convert.py
+	cd examples/slashtag-url/; ln -sf ../slashtag/slashtag.parquet .
+	cd examples/slashtag-url/; ln -sf ../slashtag/slashtag-hosts.parquet .
+examples/slashtag/host-index-paths.gz:
+	curl -L -o examples/slashtag/host-index-paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/projects/host-index-testing/v2.paths.gz"
+	cd examples/slashtag-url/; ln -sf ../slashtag/host-index-paths.gz .
+examples/slashtag/annotate.py:
+	cd examples/slashtag/; ln -s ../../*.py .
+examples/slashtag-url/annotate.py:
+	cd examples/slashtag-url/; ln -s ../../*.py .
+examples/slashtag-url/cc-index-table.paths.gz:
+	curl -L -o examples/slashtag-url/cc-index-table.paths.gz --retry 1000 --retry-all-errors --retry-delay 1 "https://data.commoncrawl.org/crawl-data/CC-MAIN-2024-51/cc-index-table.paths.gz"
 
 examples/web-graph-wikipedia/annotate.py:
 	cd examples/web-graph-wikipedia/; ln -s ../../*.py .

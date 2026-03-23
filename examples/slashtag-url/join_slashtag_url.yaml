@@ -1,0 +1,13 @@
+# Slashtag data (blekko) — URL-level topic categories
+# https://github.com/blekko/slashtag-data
+# categories column is a LIST — use list_contains(categories, 'news') for exact matching
+table:
+  local: ../slashtag/slashtag.parquet
+
+right_columns:
+  - domain
+  - url
+  - categories
+join_columns:
+  left: url_surtkey
+  right: surt_url_key
