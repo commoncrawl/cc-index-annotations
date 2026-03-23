@@ -1,0 +1,6 @@
+# Domains appearing in multiple blekko slashtag categories
+sql: "SELECT {columns} FROM joined WHERE {where}"
+columns: "surt_host_name, domain, categories"
+where: "categories IS NOT NULL AND len(categories) > 1"
+limits:
+  count: 50

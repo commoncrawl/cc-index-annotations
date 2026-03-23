@@ -1,0 +1,5 @@
+sql: "SELECT {columns} FROM joined WHERE {where}"
+columns: "surt_host_name, domain, categories"
+where: "categories IS NOT NULL"
+limits:
+  count: 100

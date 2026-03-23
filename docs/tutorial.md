@@ -297,7 +297,7 @@ See [creating-annotations.md](creating-annotations.md) for the full spec, and [y
 - **Debug with CSV**: add `-d` to your fetch script to also write a CSV you can open in a spreadsheet
 - **Stack annotations**: pass multiple join YAMLs to combine datasets in one query
 - **Use `prefix`**: when stacking, add `prefix: curlie_` to avoid column name collisions
-- **Check `examples/`**: there are 20 working examples covering spam lists, university rankings, fact-checkers, popularity rankings, and more
+- **Check `examples/`**: there are over 20 working examples covering spam lists, university rankings, fact-checkers, popularity rankings, and more
 
 ## Built with
 
