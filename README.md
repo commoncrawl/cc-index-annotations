@@ -1,7 +1,6 @@
 # cc-index-annotations
 
-**Join your own data against Common Crawl's web index, and query
-the slice you need.**
+**Join your own data against Common Crawl's web index, and query just the slice you need.**
 
 [Common Crawl](https://commoncrawl.org/)'s datasets are all random
 access — you can use an index to efficiently process a subset of
