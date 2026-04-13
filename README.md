@@ -162,11 +162,12 @@ cd -
 Example output:
 
 ```csv
-"surt_host_name","crawl","hcrank10","webgraph_outdegree","webgraph_indegree"
-"org,commoncrawl","CC-MAIN-2024-30",5.085,291,1746
-"org,commoncrawl","CC-MAIN-2024-42",5.067,294,1624
-"org,commoncrawl","CC-MAIN-2025-08",4.973,330,1682
-"org,commoncrawl","CC-MAIN-2025-18",4.845,310,1721
+| surt_host_name | crawl | hcrank10 | webgraph_outdegree | webgraph_indegree |
+| org | commoncrawl | CC-MAIN-2024-30 | 5.085 | 291 | 1746 |
+| org | commoncrawl | CC-MAIN-2024-42 | 5.067 | 294 | 1624 |
+| org | commoncrawl | CC-MAIN-2025-08 | 4.973 | 330 | 1682 |
+| org | commoncrawl | CC-MAIN-2025-18 | 4.845 | 310 | 1721 |
+| [...] |
 ```
 
 ## Examples
