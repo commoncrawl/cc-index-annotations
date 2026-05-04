@@ -7,7 +7,7 @@ Optionally, CWUR world rankings can be added for the top 2000 universities.
 | Source | URL | License | What it covers |
 |--------|-----|---------|----------------|
 | Hipo University Domains List | https://github.com/Hipo/university-domains-list | MIT | ~10,000 university domains worldwide with country info |
-| CWUR World University Rankings 2025 | https://cwur.org/2025.php | Fair use | Top 2000 universities ranked (optional, see below) |
+| CWUR World University Rankings 2025 | https://cwur.org/2025.php | copyrighted | Top 2000 universities ranked (optional, see below) |
 
 ## Default output (Hipo only)
 
