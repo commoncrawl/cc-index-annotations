@@ -5,6 +5,8 @@ misinformation flags from [NewsGuard](https://www.newsguardtech.com/),
 which rates thousands of news and information sites on a 0–100 scale
 across nine journalistic criteria.
 
+The bundled `metadata_sample-2024_05.csv` file courtesy of NewsGuard.
+
 ## What's in this annotation
 
 | Column | Type | Description |
