@@ -1,4 +1,4 @@
-.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse university-ranking university-ranking-url tranco-top1m external-data fineweb-edu wikipedia-categories wikipedia-categories-intl curlie slashtag
+.PHONY: examples web-graph gneissweb wikipedia-spam wikipedia-perennial spam-abuse university-ranking university-ranking-url tranco-top1m external-data fineweb-edu wikipedia-categories wikipedia-categories-intl curlie slashtag newsguard
 
 examples: web-graph gneissweb wikipedia-spam web-graph-wikipedia wikipedia-perennial university-ranking
 
@@ -146,3 +146,12 @@ examples/university-ranking-url/annotate.py:
 	cd examples/university-ranking-url/; ln -s ../../*.py .
 examples/university-ranking-url/cc-index-table.paths.gz: shared/cc-index-table.paths.gz
 	cd examples/university-ranking-url/; ln -sf ../../shared/cc-index-table.paths.gz .
+
+newsguard: examples/newsguard/newsguard.parquet examples/newsguard/annotate.py
+
+examples/newsguard/newsguard.parquet:
+	cd examples/newsguard; python3 newsguard-convert.py metadata_sample-2024_05.csv newsguard.parquet
+
+examples/newsguard/annotate.py: shared/host-index-paths.gz
+	cd examples/newsguard/; ln -s ../../*.py .
+	cd examples/newsguard/; ln -sf ../../shared/host-index-paths.gz .

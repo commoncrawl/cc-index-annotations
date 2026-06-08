@@ -1,0 +1,7 @@
+# Common Crawl host index via HTTPS
+# Requires: make newsguard (from project root) to fetch host-index-paths.gz
+table:
+  web_prefix: https://data.commoncrawl.org/
+  paths: host-index-paths.gz
+limits:
+  grep: [CC-MAIN-2025-18]

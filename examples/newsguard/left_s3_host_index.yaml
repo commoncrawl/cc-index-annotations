@@ -1,0 +1,7 @@
+# Common Crawl host index via S3 (faster, requires AWS credentials)
+# Requires: make newsguard (from project root) to fetch host-index-paths.gz
+table:
+  s3_prefix: s3://commoncrawl/
+  paths: host-index-paths.gz
+limits:
+  grep: [CC-MAIN-2025-18]

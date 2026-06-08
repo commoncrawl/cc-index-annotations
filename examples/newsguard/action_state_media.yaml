@@ -1,0 +1,12 @@
+# Find hosts in the index flagged as state-controlled or state-influenced
+# Usage: python annotate.py left_web_host_index.yaml join_newsguard.yaml \
+#            action_state_media.yaml
+sql: "SELECT {columns} FROM joined WHERE {where} ORDER BY surt_host_name ASC"
+columns: >-
+  surt_host_name, crawl,
+  newsguard_rating, newsguard_score,
+  newsguard_flag_state, newsguard_flag_stateinfluenced,
+  newsguard_flag_russiastate, newsguard_flag_chinastate, newsguard_flag_iranstate
+where: >-
+  (newsguard_flag_state = true OR newsguard_flag_stateinfluenced = true)
+  AND crawl = 'CC-MAIN-2025-18'
