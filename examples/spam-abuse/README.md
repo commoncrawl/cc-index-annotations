@@ -4,8 +4,8 @@ This example combines multiple public spam, abuse, malware, and phishing domain 
 
 | Source | URL | License | What it covers |
 |--------|-----|---------|----------------|
-| URLhaus (abuse.ch) | https://urlhaus.abuse.ch/ | CC0 | Malware distribution URLs |
-| PhishTank | https://www.phishtank.com/ | Free (API key optional) | Verified phishing URLs |
+| URLhaus (abuse.ch) | https://urlhaus.abuse.ch/ | Fair use, no derivatives | Malware distribution URLs |
+| PhishTank | https://www.phishtank.com/ | Non commercial only, written permission required | Verified phishing URLs |
 | UT1 Blacklists | https://github.com/olbat/ut1-blacklists | CC BY-SA | Categorized domain lists (malware, phishing, ddos, cryptojacking) |
 
 Note: OpenPhish was considered but excluded because their robots.txt disallows automated access to the community feed. Feodo Tracker was excluded because their datasets are currently empty and IP-only (no domain data).
