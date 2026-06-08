@@ -1,0 +1,11 @@
+# Look up a specific domain's NewsGuard rating in the host index
+# Usage: python annotate.py left_web_host_index.yaml join_newsguard.yaml \
+#            action_surt_host_name.yaml example.com
+sql: "SELECT {columns} FROM joined WHERE {where} ORDER BY crawl ASC"
+columns: >-
+  surt_host_name, crawl,
+  newsguard_rating, newsguard_score, newsguard_orientation,
+  newsguard_flag_covid, newsguard_flag_hlth, newsguard_flag_state
+where: "surt_host_name = '{argv}'{and_tld}"
+argv:
+  surt_host_name: true

@@ -1,0 +1,10 @@
+# Find hosts in the index that NewsGuard rates as generally trustworthy
+# Usage: python annotate.py left_web_host_index.yaml join_newsguard.yaml \
+#            action_trustworthy.yaml
+sql: "SELECT {columns} FROM joined WHERE {where} ORDER BY newsguard_score DESC"
+columns: >-
+  surt_host_name, crawl,
+  newsguard_rating, newsguard_score, newsguard_orientation, newsguard_topics
+where: >-
+  newsguard_rating = 'T'
+  AND crawl = 'CC-MAIN-2025-18'

@@ -1,0 +1,50 @@
+# NewsGuard annotation — news source credibility ratings and flags
+# Data: https://www.newsguardtech.com/
+table:
+  local: ./
+right_columns:
+  # Core rating
+  - newsguard_domain
+  - newsguard_rating
+  - newsguard_score
+  - newsguard_country
+  - newsguard_orientation
+  # Nine criteria
+  - newsguard_criteria_no_false_content
+  - newsguard_criteria_responsible_reporting
+  - newsguard_criteria_error_correction
+  - newsguard_criteria_news_opinion_separation
+  - newsguard_criteria_no_deceptive_headlines
+  - newsguard_criteria_ownership_disclosure
+  - newsguard_criteria_ad_labeling
+  - newsguard_criteria_management_disclosure
+  - newsguard_criteria_content_creator_info
+  # Misinformation flags
+  - newsguard_flag_covid
+  - newsguard_flag_hlth
+  - newsguard_flag_vacc
+  - newsguard_flag_elec
+  - newsguard_flag_ukraine
+  - newsguard_flag_climate
+  - newsguard_flag_israelhamas
+  - newsguard_flag_politics
+  - newsguard_flag_abortion
+  - newsguard_flag_qannon
+  # Provenance flags
+  - newsguard_flag_state
+  - newsguard_flag_stateinfluenced
+  - newsguard_flag_russiastate
+  - newsguard_flag_chinastate
+  - newsguard_flag_iranstate
+  # Content quality flags
+  - newsguard_flag_hideparty
+  - newsguard_flag_partisanlocal
+  - newsguard_flag_plag
+  - newsguard_flag_hoax
+  - newsguard_flag_dead
+  - newsguard_flag_uain
+  # Descriptive metadata
+  - newsguard_topics
+  - newsguard_targeted_audience
+join_columns:
+  - surt_host_name

@@ -1,0 +1,15 @@
+# NewsGuard annotation — lightweight: rating, score, and key flags only
+table:
+  local: ./
+right_columns:
+  - newsguard_rating
+  - newsguard_score
+  - newsguard_flag_covid
+  - newsguard_flag_hlth
+  - newsguard_flag_elec
+  - newsguard_flag_state
+  - newsguard_flag_dead
+  - newsguard_flag_plag
+  - newsguard_flag_uain
+join_columns:
+  - surt_host_name

@@ -1,0 +1,19 @@
+# Find hosts in the index that NewsGuard has flagged for misinformation
+# Usage: python annotate.py left_web_host_index.yaml join_newsguard.yaml \
+#            action_flagged_misinfo.yaml
+sql: "SELECT {columns} FROM joined WHERE {where} ORDER BY newsguard_score ASC"
+columns: >-
+  surt_host_name, crawl,
+  newsguard_rating, newsguard_score,
+  newsguard_flag_covid, newsguard_flag_hlth, newsguard_flag_vacc,
+  newsguard_flag_elec, newsguard_flag_ukraine, newsguard_flag_climate,
+  newsguard_flag_israelhamas, newsguard_flag_politics
+where: >-
+  (newsguard_flag_covid = true
+   OR newsguard_flag_hlth = true
+   OR newsguard_flag_elec = true
+   OR newsguard_flag_ukraine = true
+   OR newsguard_flag_climate = true
+   OR newsguard_flag_israelhamas = true
+   OR newsguard_flag_politics = true)
+  AND crawl = 'CC-MAIN-2025-18'
