@@ -230,10 +230,10 @@ def build_dataframe(hipo, cwur):
             "surt_host_name": s,
             "domain": domain,
             "is_university": True,
-            "in_hipo": in_hipo,
-            "in_cwur": in_cwur,
-            "country": hipo[domain]["country"] if in_hipo else "",
-            "university_name": cwur[domain].get("cwur_name", "") if in_cwur else hipo.get(domain, {}).get("name", ""),
+            "in_hipo": in_hipo or None,
+            "in_cwur": in_cwur or None,
+            "country": hipo[domain]["country"] if in_hipo else None,
+            "university_name": (cwur[domain].get("cwur_name", "") if in_cwur else hipo.get(domain, {}).get("name", "")) or None,
         }
 
         if in_cwur:
@@ -259,6 +259,8 @@ def build_dataframe(hipo, cwur):
     int_cols = [c for c in df.columns if c.startswith("cwur_") and c != "cwur_score"]
     for c in int_cols:
         df[c] = df[c].astype("Int64")
+    for c in ("is_university", "in_hipo", "in_cwur"):
+        df[c] = df[c].astype("boolean")
     df = df.sort_values("surt_host_name").reset_index(drop=True)
     return df
 

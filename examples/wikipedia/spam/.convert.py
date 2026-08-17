@@ -117,7 +117,7 @@ def _process_domain_line(line, is_shortener=False):
                             'domain': d,
                             'domain_regex': domain_regex,
                             'wikipedia_spam': True,
-                            'wikipedia_shortener': is_shortener,
+                            'wikipedia_shortener': is_shortener or None,
                         }
                         results.append(entry)
                     except:
@@ -162,7 +162,7 @@ df = pd.DataFrame(domains)
 
 bool_cols = ["wikipedia_spam", "wikipedia_shortener"]
 for col in bool_cols:
-    df[col] = df[col].astype('boolean').fillna(False).astype(bool)
+    df[col] = df[col].astype('boolean')
 
 df = df.sort_values("surt_host_name").reset_index(drop=True)
 

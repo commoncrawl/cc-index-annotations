@@ -19,13 +19,13 @@ right_columns:
   #- wikipedia_cat_animal
   #- wikipedia_cat_automotive
   #- wikipedia_cat_cannabis
-  #- wikipedia_cat_children's
+  #- wikipedia_cat_children_s
   #- wikipedia_cat_community
   #- wikipedia_cat_conspiracist
   #- wikipedia_cat_debate
   #- wikipedia_cat_disability
   #- wikipedia_cat_download
-  #- wikipedia_cat_e-commerce
+  #- wikipedia_cat_e_commerce
   #- wikipedia_cat_economics
   #- wikipedia_cat_educational
   #- wikipedia_cat_employment
@@ -39,7 +39,7 @@ right_columns:
   #- wikipedia_cat_history
   #- wikipedia_cat_law_enforcement
   #- wikipedia_cat_legal
-  #- wikipedia_cat_lgbtq-related
+  #- wikipedia_cat_lgbtq_related
   #- wikipedia_cat_lifestyle
   #- wikipedia_cat_linguistics
   #- wikipedia_cat_literature

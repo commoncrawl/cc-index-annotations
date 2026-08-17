@@ -182,13 +182,13 @@ def build_dataframe(sources):
             continue
         row = {"surt_host_name": s, "domain": domain}
         for source_name in sorted(sources.keys()):
-            row[f"abuse_{source_name}"] = domain in sources[source_name]
+            row[f"abuse_{source_name}"] = (domain in sources[source_name]) or None
         rows.append(row)
 
     df = pd.DataFrame(rows)
     bool_cols = [c for c in df.columns if c.startswith("abuse_")]
     for c in bool_cols:
-        df[c] = df[c].astype(bool)
+        df[c] = df[c].astype("boolean")
     df = df.sort_values("surt_host_name").reset_index(drop=True)
     return df
 
