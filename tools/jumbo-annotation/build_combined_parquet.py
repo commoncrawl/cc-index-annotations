@@ -66,6 +66,8 @@ def _find_repo_root():
 
 
 ROOT = _find_repo_root()
+sys.path.insert(0, ROOT)
+import utils
 
 # ═══════════════════════════════════════════════════════════════════════
 # Source registries
@@ -1020,7 +1022,7 @@ def build_external_source(name, cfg, staging_dir, force=False):
 
     select_parts = ["m.surt_host_name"]
     for col in right_cols:
-        out_name = f"{prefix}{col}" if prefix else col
+        out_name = utils.sanitize_col(f"{prefix}{col}" if prefix else col)
         select_parts.append(f's."{col}" AS "{out_name}"')
     select_parts.append(f'true AS "in_{name}"')
 
@@ -1077,7 +1079,7 @@ def _prefixed_col(col, col_prefix, source_name):
         return col
     if col == f"in_{source_name}":
         return col
-    return f"{col_prefix}_{col}"
+    return utils.sanitize_col(f"{col_prefix}_{col}")
 
 
 def merge_all(parquet_paths, source_names, col_prefixes, output_path,
