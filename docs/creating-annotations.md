@@ -55,6 +55,36 @@ your_column_b   (bool/int/float/string)
 
 Sort by `surt_host_name` before writing — this significantly improves join performance.
 
+### Dating your snapshot
+
+If your source data changes over time (e.g. re-scraped periodically), write each run into a
+`fetched=YYYY-MM-DD/` subdirectory rather than overwriting a flat file. DuckDB's hive
+partitioning (enabled everywhere in this project) turns that folder name into a real,
+queryable `fetched` column automatically - no schema changes needed:
+
+```python
+import utils
+
+out_dir = utils.dated_output_dir('.')          # creates ./fetched=2026-06-09/
+out_path = os.path.join(out_dir, 'my-annotation.parquet')
+df.to_parquet(out_path, index=False)
+utils.refresh_latest_symlink(out_path)          # ./my-annotation.parquet -> fetched=.../my-annotation.parquet
+```
+
+`refresh_latest_symlink` keeps a flat-named symlink pointing at the newest snapshot, so
+existing YAML templates, Makefile targets, and downstream tooling that expect
+`my-annotation.parquet` keep working unmodified. Anyone who wants history or wants to
+compare snapshots over time can instead point `table.local` at the whole directory and
+filter/join on `fetched` directly.
+
+If the source data was fetched to a local cache file first, pass it as `cache_ref` so the
+date reflects when the data was actually pulled, not whenever the script happens to re-run
+against a cached copy:
+
+```python
+out_dir = utils.dated_output_dir('.', cache_ref='.cache/source.json')
+```
+
 ### Writing the parquet
 
 ```python

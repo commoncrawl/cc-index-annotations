@@ -367,6 +367,13 @@ table:
 | Host index | `surt_host_name`, `crawl` | Hostname + crawl ID (e.g. `CC-MAIN-2024-33`) |
 | URL index | `url_surtkey`, `crawl`, `fetch_time` | Full SURT URL + crawl + timestamp |
 
+Some annotations additionally expose a `fetched` column (a hive-partition key, e.g.
+`fetched=2026-06-09/`, surfaced by DuckDB as a real `DATE`) when the underlying dataset is
+periodically re-fetched and multiple dated snapshots are kept side by side. Use it in
+`join_columns` or a `where` filter to pin a specific snapshot, or self-join two values of
+`fetched` to compare how an annotation changed over time. If omitted, joins resolve against
+whichever snapshot the flat filename symlinks to (the most recent one).
+
 ---
 
 ## File naming conventions
