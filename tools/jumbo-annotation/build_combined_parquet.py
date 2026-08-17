@@ -478,7 +478,7 @@ def ensure_rolled_up(parquet_path, source_name, staging_dir, force=False):
         return rollup_path
 
     con = safe_duckdb(staging_dir)
-    src = f"read_parquet('{parquet_path}', union_by_name=true)"
+    src = f"read_parquet('{parquet_path}', union_by_name=true, hive_partitioning=true)"
 
     dup_count = con.execute(f"""
         SELECT count(*) FROM (
