@@ -3,7 +3,7 @@ table:
   paths: wikipedia-perennial*.parquet
 
 right_columns:
-  - domain
+  - host
   - wiki_lang
   - wiki_page
   - source_name
