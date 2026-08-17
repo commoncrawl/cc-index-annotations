@@ -1,7 +1,15 @@
 import datetime
 import os
+import re
 
 import surt
+
+_COL_RE = re.compile(r'\W+', re.UNICODE)
+
+
+def sanitize_col(name):
+    '''map runs of non-word chars (spaces, quotes, dashes, ...) to _ for SQL/parquet-friendly column names'''
+    return _COL_RE.sub('_', name).strip('_')
 
 
 def thing_to_surt_host_name(thing, verbose=0):
