@@ -1,3 +1,6 @@
+import datetime
+import os
+
 import surt
 
 
@@ -25,3 +28,24 @@ def thing_to_surt_host_name(thing, verbose=0):
     if ',,' in  surt_host_name:
         raise ValueError('unexpected ,, in '+thing)
     return surt_host_name
+
+
+def dated_output_dir(base_dir, cache_ref=None):
+    '''fetched=YYYY-MM-DD/ subdir under base_dir; date from cache_ref's mtime if given, else today (UTC)'''
+    if cache_ref and os.path.exists(cache_ref):
+        date = datetime.datetime.utcfromtimestamp(os.path.getmtime(cache_ref)).date()
+    else:
+        date = datetime.datetime.utcnow().date()
+    path = os.path.join(base_dir, f'fetched={date.isoformat()}')
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def refresh_latest_symlink(dated_path):
+    '''(re)create <base_dir>/<name> -> fetched=DATE/<name> so flat-path consumers keep working'''
+    base_dir, fetched_dir = os.path.split(os.path.dirname(dated_path))
+    name = os.path.basename(dated_path)
+    link = os.path.join(base_dir, name)
+    if os.path.islink(link) or os.path.exists(link):
+        os.remove(link)
+    os.symlink(os.path.join(fetched_dir, name), link)
