@@ -6,7 +6,7 @@ table:
   local: ./curlie.parquet
 
 right_columns:
-  - domain
+  - host
   - lang
   - category
 join_columns:
