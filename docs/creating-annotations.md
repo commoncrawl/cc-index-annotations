@@ -94,12 +94,18 @@ df = df.sort_values("surt_host_name").reset_index(drop=True)
 df.to_parquet("my-annotation.parquet", index=False)
 ```
 
-For boolean columns, ensure they are actual bools, not objects:
+For boolean columns, use pandas' nullable boolean dtype — NULL means "not annotated",
+an explicit `True`/`False` means the annotation applies/doesn't. Don't fill absent
+values with `False` or `""`; that inflates completeness metrics and conflates
+"checked and negative" with "never annotated":
 
 ```python
 for col in bool_columns:
-    df[col] = df[col].astype(bool)
+    df[col] = df[col].astype("boolean")
 ```
+
+Column names should contain only word characters and underscores - no spaces, quotes,
+or dashes. `utils.sanitize_col()` maps anything else to underscores.
 
 ## Step 2: Provide YAML templates
 
