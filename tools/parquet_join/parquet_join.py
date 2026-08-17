@@ -25,7 +25,7 @@ def resolve_path(path: str) -> str:
 
 def get_columns(con: duckdb.DuckDBPyConnection, path: str) -> list[str]:
     return [row[0] for row in con.execute(
-        f"DESCRIBE SELECT * FROM read_parquet('{path}', union_by_name=true)"
+        f"DESCRIBE SELECT * FROM read_parquet('{path}', union_by_name=true, hive_partitioning=true)"
     ).fetchall()]
 
 
@@ -118,7 +118,7 @@ def main():
     cols0 = get_columns(con, pattern0)
     select_parts = build_join_key_select(join_cols, len(inputs), args.how)
     select_parts += build_select(cols0, "t0", prefix0, join_cols, exclude0)
-    from_clause = f"read_parquet('{pattern0}', union_by_name=true) AS t0"
+    from_clause = f"read_parquet('{pattern0}', union_by_name=true, hive_partitioning=true) AS t0"
     join_clauses = []
 
     how_sql = {"inner": "INNER", "outer": "FULL OUTER", "left": "LEFT", "right": "RIGHT", "cross": "CROSS"}
@@ -132,7 +132,7 @@ def main():
             sys.exit("No join columns specified")
         select_parts += build_select(cols, alias, prefix, on_cols, exclude)
         on_clause = " AND ".join(f't0."{c}" = {alias}."{c}"' for c in on_cols)
-        join_clauses.append(f"{join_type} JOIN read_parquet('{pattern}', union_by_name=true) AS {alias} ON {on_clause}")
+        join_clauses.append(f"{join_type} JOIN read_parquet('{pattern}', union_by_name=true, hive_partitioning=true) AS {alias} ON {on_clause}")
 
     select_sql = ",\n         ".join(select_parts)
     joins_sql = "  ".join(join_clauses)

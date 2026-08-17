@@ -129,7 +129,7 @@ def walk_category_tree(root, max_depth=MAX_DEPTH):
         if subcat in skip:
             print(f'  skip: {subcat}')
             continue
-        topic = subcat.replace('Category:', '').replace(' websites', '').replace(' ', '_').lower()
+        topic = utils.sanitize_col(subcat.replace('Category:', '').replace(' websites', '').lower())
         print(f'  {topic}: {subcat}')
         walk(subcat, topic, 1)
         print(f'    -> {sum(1 for t, cats in all_pages.items() if topic in cats)} articles so far')
@@ -260,8 +260,8 @@ def main():
     sorted_topics = sorted(all_topics)
     for row in rows:
         for topic in sorted_topics:
-            row[f'wikipedia_cat_{topic}'] = topic in row['categories']
-        row['categories'] = ';'.join(sorted(row['categories']))
+            row[f'wikipedia_cat_{topic}'] = (topic in row['categories']) or None
+        row['categories'] = ';'.join(sorted(row['categories'])) or None
 
     rows.sort(key=lambda r: r['surt_host_name'])
     print(f'\nTotal unique domains: {len(rows)}')
@@ -281,8 +281,11 @@ def main():
         (f'wikipedia_cat_{t}', pa.bool_()) for t in sorted_topics
     ])
     table = pa.table({col.name: [r[col.name] for r in rows] for col in schema}, schema=schema)
-    pq.write_table(table, 'wikipedia-categories.parquet')
-    print(f'Wrote wikipedia-categories.parquet')
+    out_dir = utils.dated_output_dir('.')
+    out_path = os.path.join(out_dir, 'wikipedia-categories.parquet')
+    pq.write_table(table, out_path)
+    utils.refresh_latest_symlink(out_path)
+    print(f'Wrote {out_path} (+ wikipedia-categories.parquet symlink)')
 
     if DEBUG:
         import pyarrow.csv as csv

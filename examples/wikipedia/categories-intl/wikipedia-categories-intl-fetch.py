@@ -228,7 +228,7 @@ def main():
         for subcat in sorted(top_subcats):
             if subcat in skip:
                 continue
-            key = subcat.replace('Category:', '').replace(' websites', '').replace(' ', '_').lower()
+            key = utils.sanitize_col(subcat.replace('Category:', '').replace(' websites', '').lower())
             en_cats[key] = subcat
         print(f'  {len(en_cats)} English categories to map internationally')
     else:
@@ -311,10 +311,10 @@ def main():
 
     all_cat_keys = sorted(en_cats.keys())
     for row in rows:
-        row['wiki_langs'] = ';'.join(sorted(row['_langs']))
-        row['categories'] = ';'.join(sorted(row['_cats']))
+        row['wiki_langs'] = ';'.join(sorted(row['_langs'])) or None
+        row['categories'] = ';'.join(sorted(row['_cats'])) or None
         for key in all_cat_keys:
-            row[f'wikipedia_cat_{key}'] = key in row['_cats']
+            row[f'wikipedia_cat_{key}'] = (key in row['_cats']) or None
         del row['_cats'], row['_langs']
 
     rows.sort(key=lambda r: r['surt_host_name'])
@@ -337,8 +337,11 @@ def main():
         (f'wikipedia_cat_{k}', pa.bool_()) for k in all_cat_keys
     ])
     table = pa.table({col.name: [r[col.name] for r in rows] for col in schema}, schema=schema)
-    pq.write_table(table, 'wikipedia-categories-intl.parquet')
-    print(f'Wrote wikipedia-categories-intl.parquet')
+    out_dir = utils.dated_output_dir('.')
+    out_path = os.path.join(out_dir, 'wikipedia-categories-intl.parquet')
+    pq.write_table(table, out_path)
+    utils.refresh_latest_symlink(out_path)
+    print(f'Wrote {out_path} (+ wikipedia-categories-intl.parquet symlink)')
 
     if DEBUG:
         import pyarrow.csv as csv

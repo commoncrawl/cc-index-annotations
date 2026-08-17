@@ -5,7 +5,7 @@ table:
   local: ../slashtag/slashtag.parquet
 
 right_columns:
-  - domain
+  - host
   - url
   - categories
 join_columns:

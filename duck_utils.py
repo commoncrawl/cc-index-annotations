@@ -94,6 +94,15 @@ def db_config(config, verbose=0):
                 paths = [path]
             elif os.path.isdir(path):
                 paths = glob.glob(path + '/*.parquet') + glob.glob(path + '/**/*.parquet')
+                # dedupe: a flat symlink (e.g. from utils.refresh_latest_symlink) and its
+                # hive-partitioned target both match here; keep the partitioned path so
+                # hive keys stay consistent across all paths passed to duckdb
+                by_real = {}
+                for p in paths:
+                    real = os.path.realpath(p)
+                    if real not in by_real or (os.path.islink(by_real[real]) and not os.path.islink(p)):
+                        by_real[real] = p
+                paths = list(by_real.values())
             elif '*' in path or '?' in path:
                 paths = glob.glob(path)
             else:

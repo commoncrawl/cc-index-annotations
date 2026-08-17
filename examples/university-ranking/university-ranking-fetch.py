@@ -14,6 +14,9 @@ from urllib.robotparser import RobotFileParser
 import pandas as pd
 import surt
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+import utils
+
 debugging = True
 
 UA = "university-ranking-fetcher/1.0 (Common Crawl Foundation; https://github.com/commoncrawl/cc-index-annotations)"
@@ -227,10 +230,10 @@ def build_dataframe(hipo, cwur):
             "surt_host_name": s,
             "domain": domain,
             "is_university": True,
-            "in_hipo": in_hipo,
-            "in_cwur": in_cwur,
-            "country": hipo[domain]["country"] if in_hipo else "",
-            "university_name": cwur[domain].get("cwur_name", "") if in_cwur else hipo.get(domain, {}).get("name", ""),
+            "in_hipo": in_hipo or None,
+            "in_cwur": in_cwur or None,
+            "country": hipo[domain]["country"] if in_hipo else None,
+            "university_name": (cwur[domain].get("cwur_name", "") if in_cwur else hipo.get(domain, {}).get("name", "")) or None,
         }
 
         if in_cwur:
@@ -256,6 +259,8 @@ def build_dataframe(hipo, cwur):
     int_cols = [c for c in df.columns if c.startswith("cwur_") and c != "cwur_score"]
     for c in int_cols:
         df[c] = df[c].astype("Int64")
+    for c in ("is_university", "in_hipo", "in_cwur"):
+        df[c] = df[c].astype("boolean")
     df = df.sort_values("surt_host_name").reset_index(drop=True)
     return df
 
@@ -281,8 +286,11 @@ if __name__ == "__main__":
     print(f"  in_cwur: {df['in_cwur'].sum()}", file=sys.stderr)
     print(f"  both: {(df['in_hipo'] & df['in_cwur']).sum()}", file=sys.stderr)
 
-    df.to_parquet("university-ranking.parquet", index=False)
-    print("Wrote university-ranking.parquet", file=sys.stderr)
+    out_dir = utils.dated_output_dir(".")
+    out_path = os.path.join(out_dir, "university-ranking.parquet")
+    df.to_parquet(out_path, index=False)
+    utils.refresh_latest_symlink(out_path)
+    print(f"Wrote {out_path} (+ university-ranking.parquet symlink)", file=sys.stderr)
 
     if debugging:
         df.to_csv("university-ranking.tsv", sep="\t", index=False)

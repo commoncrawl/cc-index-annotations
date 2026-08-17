@@ -40,7 +40,7 @@ else:
 print(f'  -> {len(data)} tags, {sum(len(v.get("urls", [])) for v in data.values())} URLs')
 
 # EXTRACT — one row per (url, tag), compute surt
-print('Extracting domains and computing SURTs...')
+print('Extracting hosts and computing SURTs...')
 rows = []
 skipped = 0
 for tag, info in data.items():
@@ -51,13 +51,13 @@ for tag, info in data.items():
             continue
         try:
             parsed = urlparse(url)
-            domain = parsed.netloc.lower().lstrip('www.')
-            if not domain or '.' not in domain:
+            host = parsed.netloc.lower().lstrip('www.')
+            if not host or '.' not in host:
                 continue
-            surt_host = utils.thing_to_surt_host_name(domain)
+            surt_host = utils.thing_to_surt_host_name(host)
             url_surtkey = surt_lib.surt(url)
             if surt_host:
-                rows.append((surt_host, url_surtkey, domain, url, category))
+                rows.append((surt_host, url_surtkey, host, url, category))
         except (ValueError, TypeError):
             continue
 
@@ -65,40 +65,45 @@ print(f'  {len(rows)} rows ({skipped} wildcards skipped)')
 
 # AGGREGATE — per-URL categories as LIST
 con = duckdb.connect()
-con.execute("CREATE TABLE raw (surt_host_name VARCHAR, surt_url_key VARCHAR, domain VARCHAR, url VARCHAR, category VARCHAR)")
+con.execute("CREATE TABLE raw (surt_host_name VARCHAR, surt_url_key VARCHAR, host VARCHAR, url VARCHAR, category VARCHAR)")
 con.executemany("INSERT INTO raw VALUES (?, ?, ?, ?, ?)", rows)
 
-# URL-level: one row per (domain, url), categories as list
+# URL-level: one row per (host, url), categories as list
 con.sql("""
 CREATE TABLE slashtag_urls AS
-SELECT surt_host_name, surt_url_key, domain, url,
+SELECT surt_host_name, surt_url_key, host, url,
   list(DISTINCT category ORDER BY category) as categories
 FROM raw
-GROUP BY surt_host_name, surt_url_key, domain, url
+GROUP BY surt_host_name, surt_url_key, host, url
 ORDER BY surt_host_name
 """)
 
 url_rows = con.sql("SELECT count(*) FROM slashtag_urls").fetchone()[0]
 print(f'URL-level: {url_rows} rows')
 
-con.sql("COPY slashtag_urls TO 'slashtag.parquet' (FORMAT PARQUET)")
-print('Wrote slashtag.parquet')
+out_dir = utils.dated_output_dir('.', cache_ref=cache_file)
+url_out = os.path.join(out_dir, 'slashtag.parquet')
+con.sql(f"COPY slashtag_urls TO '{url_out}' (FORMAT PARQUET)")
+utils.refresh_latest_symlink(url_out)
+print(f'Wrote {url_out} (+ slashtag.parquet symlink)')
 
-# HOST-level: one row per domain, union of all URL categories
+# HOST-level: one row per host, union of all URL categories
 con.sql("""
 CREATE TABLE slashtag_hosts AS
-SELECT surt_host_name, domain,
+SELECT surt_host_name, host,
   list(DISTINCT unnested ORDER BY unnested) as categories
-FROM (SELECT surt_host_name, domain, unnest(categories) as unnested FROM slashtag_urls)
-GROUP BY surt_host_name, domain
+FROM (SELECT surt_host_name, host, unnest(categories) as unnested FROM slashtag_urls)
+GROUP BY surt_host_name, host
 ORDER BY surt_host_name
 """)
 
 host_rows = con.sql("SELECT count(*) FROM slashtag_hosts").fetchone()[0]
 print(f'Host-level: {host_rows} rows')
 
-con.sql("COPY slashtag_hosts TO 'slashtag-hosts.parquet' (FORMAT PARQUET)")
-print('Wrote slashtag-hosts.parquet')
+hosts_out = os.path.join(out_dir, 'slashtag-hosts.parquet')
+con.sql(f"COPY slashtag_hosts TO '{hosts_out}' (FORMAT PARQUET)")
+utils.refresh_latest_symlink(hosts_out)
+print(f'Wrote {hosts_out} (+ slashtag-hosts.parquet symlink)')
 
 if DEBUG:
     con.sql("COPY slashtag_urls TO 'slashtag.csv' (FORMAT CSV, HEADER)")

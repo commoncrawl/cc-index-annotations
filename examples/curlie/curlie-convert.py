@@ -110,36 +110,36 @@ if unmapped:
         print(f'    {row[0]}')
 
 # EXTRACT DOMAIN — one row per (url, category, lang)
-print('Extracting domains...')
+print('Extracting hosts...')
 con.sql("""
 CREATE TABLE extracted AS
 SELECT DISTINCT
   url,
-  split_part(split_part(url, '://', 2), '/', 1) as domain,
+  split_part(split_part(url, '://', 2), '/', 1) as host,
   lang,
   category_path as category
 FROM sites
 WHERE (url LIKE 'http://%' OR url LIKE 'https://%')
   AND category_path IS NOT NULL
-  AND domain LIKE '%.%'
-  AND length(domain) BETWEEN 4 AND 253
-  AND domain NOT LIKE '%..%'
-  AND NOT regexp_matches(domain, '[%\s<>"''\\\\{}|^`\[\]@!$&*()+=,;]')
+  AND host LIKE '%.%'
+  AND length(host) BETWEEN 4 AND 253
+  AND host NOT LIKE '%..%'
+  AND NOT regexp_matches(host, '[%\s<>"''\\\\{}|^`\[\]@!$&*()+=,;]')
 """)
 
 rows = con.sql("SELECT count(*) FROM extracted").fetchone()[0]
-domains_unique = con.sql("SELECT count(DISTINCT domain) FROM extracted").fetchone()[0]
-print(f'  {rows} (domain, category, lang) rows, {domains_unique} unique domains')
+hosts_unique = con.sql("SELECT count(DISTINCT host) FROM extracted").fetchone()[0]
+print(f'  {rows} (host, category, lang) rows, {hosts_unique} unique hosts')
 
 # ADD SURT
 print('Adding SURT keys...')
 import surt as surt_lib
 
-rows = con.sql("SELECT url, domain FROM extracted").fetchall()
+rows = con.sql("SELECT url, host FROM extracted").fetchall()
 surt_data = []
-for url, domain in rows:
+for url, host in rows:
     try:
-        surt_host = utils.thing_to_surt_host_name(domain)
+        surt_host = utils.thing_to_surt_host_name(host)
         url_surtkey = surt_lib.surt(url)
     except (ValueError, TypeError):
         continue
@@ -150,7 +150,7 @@ con.execute("CREATE TABLE surt_lookup (url VARCHAR, surt_host_name VARCHAR, url_
 con.executemany("INSERT INTO surt_lookup VALUES (?, ?, ?)", surt_data)
 
 result = con.sql("""
-SELECT s.surt_host_name, s.url_surtkey, e.domain, e.lang, e.category
+SELECT s.surt_host_name, s.url_surtkey, e.host, e.lang, e.category
 FROM extracted e JOIN surt_lookup s ON e.url = s.url
 ORDER BY s.surt_host_name
 """)
@@ -159,8 +159,11 @@ table = result.fetch_arrow_table()
 print(f'Rows: {table.num_rows}')
 
 import pyarrow.parquet as pq
-pq.write_table(table, 'curlie.parquet')
-print('Wrote curlie.parquet')
+out_dir = utils.dated_output_dir('.', cache_ref='curlie-rdf-all.tar.gz')
+out_path = os.path.join(out_dir, 'curlie.parquet')
+pq.write_table(table, out_path)
+utils.refresh_latest_symlink(out_path)
+print(f'Wrote {out_path} (+ curlie.parquet symlink)')
 
 if DEBUG:
     pa_csv.write_csv(table, 'curlie.csv')

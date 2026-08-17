@@ -1,6 +1,6 @@
 # Wikipedia perennial/reliable source pages by language
 # parser types: source_ods (French template), wikitext_table, rsp (English)
-# domain_pattern: regex to extract domains from wikitext
+# host_pattern: regex to extract hosts from wikitext
 # rating_keywords: map local terms to standardized ratings
 
 en:
@@ -13,7 +13,7 @@ fr:
   pages:
     - title: "Wikipédia:Observatoire des sources"
   parser: source_ods
-  domain_pattern: 'Utilisations domaine\|([^}]+)'
+  host_pattern: 'Utilisations domaine\|([^}]+)'
 
 zh:
   wiki: zh.wikipedia.org

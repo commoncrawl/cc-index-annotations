@@ -6,9 +6,12 @@ Requires network access to en.wikipedia.org.
 """
 from __future__ import annotations
 
-import json, re, csv, sys, time
+import json, os, re, csv, sys, time
 from urllib.request import urlopen, Request
 from urllib.parse import quote
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+import utils
 
 UA = "WPSourcesScraper/1.0 (research; contact@example.com)"
 
@@ -400,18 +403,18 @@ def explode_to_domain_rows(entries: list) -> list:
     for host, d in domain_data.items():
         row = {
             "surt_host_name": d["surt_host_name"],
-            "host_name": d["host_name"],
-            "url": d["url"],
-            "wikipedia_source": "; ".join(d["wikipedia_source"]),
-            "wikipedia_source_name": "; ".join(d["wikipedia_source_name"]),
-            "wikipedia_status": "; ".join(sorted(d["wikipedia_status"])) if d["wikipedia_status"] else "",
+            "host_name": d["host_name"] or None,
+            "url": d["url"] or None,
+            "wikipedia_source": "; ".join(d["wikipedia_source"]) or None,
+            "wikipedia_source_name": "; ".join(d["wikipedia_source_name"]) or None,
+            "wikipedia_status": "; ".join(sorted(d["wikipedia_status"])) if d["wikipedia_status"] else None,
         }
         # Status boolean columns
         for col in STATUS_COLS:
-            row[col] = col in d["_status_flags"]
+            row[col] = (col in d["_status_flags"]) or None
         # List boolean columns
         for col in LIST_COLS:
-            row[col] = col in d["_list_flags"]
+            row[col] = (col in d["_list_flags"]) or None
         out.append(row)
 
     # Sort by SURT for nice output
@@ -429,16 +432,11 @@ def save(rows: list, prefix: str = "wp_sources"):
         + LIST_COLS
     )
 
-    # Ensure every row has all columns with False for missing booleans
+    # Ensure every row has all columns; missing values stay NULL (absent != false/empty)
     for r in rows:
         for c in cols:
             if c not in r:
-                if c.startswith("wikipedia_") and c not in (
-                    "wikipedia_source", "wikipedia_source_name", "wikipedia_status"
-                ):
-                    r[c] = False
-                else:
-                    r[c] = ""
+                r[c] = None
 
     # JSON
     with open(f"{prefix}.json", "w") as f:
@@ -449,12 +447,15 @@ def save(rows: list, prefix: str = "wp_sources"):
     try:
         import pandas as pd
         df = pd.DataFrame(rows, columns=cols)
-        # Ensure bool columns are actual bools
+        # Ensure bool columns are nullable bools
         bool_cols = STATUS_COLS + LIST_COLS
         for c in bool_cols:
-            df[c] = df[c].astype(bool)
-        df.to_parquet(f"{prefix}.parquet", index=False)
-        print(f"Wrote {prefix}.parquet", file=sys.stderr)
+            df[c] = df[c].astype("boolean")
+        out_dir = utils.dated_output_dir('.')
+        out_path = os.path.join(out_dir, f"{prefix}.parquet")
+        df.to_parquet(out_path, index=False)
+        utils.refresh_latest_symlink(out_path)
+        print(f"Wrote {out_path} (+ {prefix}.parquet symlink)", file=sys.stderr)
     except ImportError:
         print("WARN: pip install pyarrow for .parquet output", file=sys.stderr)
     except Exception as e:
@@ -483,4 +484,3 @@ if __name__ == "__main__":
     entries = scrape_all()
     rows = explode_to_domain_rows(entries)
     save(rows)
-

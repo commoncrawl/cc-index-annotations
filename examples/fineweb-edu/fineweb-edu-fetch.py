@@ -145,8 +145,11 @@ table = pa.table({
 
 print(f'\nRows: {table.num_rows}')
 
-pq.write_table(table, 'fineweb-edu.parquet')
-print('Wrote fineweb-edu.parquet')
+out_dir = utils.dated_output_dir('.')
+out_path = os.path.join(out_dir, 'fineweb-edu.parquet')
+pq.write_table(table, out_path)
+utils.refresh_latest_symlink(out_path)
+print(f'Wrote {out_path} (+ fineweb-edu.parquet symlink)')
 
 if DEBUG_CSV:
     import pyarrow.csv as csv

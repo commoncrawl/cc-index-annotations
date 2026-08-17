@@ -16,7 +16,7 @@ UA = 'CCIndexAnnotations/1.0 (https://github.com/commoncrawl/cc-index-annotation
 SLEEP_BETWEEN = 1.5
 CACHE_DIR = '.cache'
 DEBUG = '--debug' in sys.argv or '-d' in sys.argv
-DOMAIN_RE = re.compile(r'(?:https?://)?(?:www\.)?([a-z0-9][-a-z0-9]*(?:\.[a-z0-9][-a-z0-9]*)+)', re.IGNORECASE)
+HOST_RE = re.compile(r'(?:https?://)?(?:www\.)?([a-z0-9][-a-z0-9]*(?:\.[a-z0-9][-a-z0-9]*)+)', re.IGNORECASE)
 
 
 def fetch(url):
@@ -55,51 +55,51 @@ def fetch_wikitext(wiki, title):
     return data.decode('utf-8', errors='replace') if data else ''
 
 
-def extract_domains_generic(text):
-    return list(set(m.lower() for m in DOMAIN_RE.findall(text) if '.' in m and len(m) > 4))
+def extract_hosts_generic(text):
+    return list(set(m.lower() for m in HOST_RE.findall(text) if '.' in m and len(m) > 4))
 
 
-def clean_domain(d):
+def clean_host(d):
     d = d.lower().strip().rstrip('/')
     if d.startswith('www.'):
         d = d[4:]
     return d if '.' in d and len(d) > 3 else None
 
 
-# FRENCH: {{Source ODS|nom=...|url={{Utilisations domaine|domain}}|résumé=...}}
+# FRENCH: {{Source ODS|nom=...|url={{Utilisations domaine|host}}|résumé=...}}
 def parse_source_ods(text, lang_config):
-    pattern = lang_config.get('domain_pattern', r'Utilisations domaine\|([^}]+)')
+    pattern = lang_config.get('host_pattern', r'Utilisations domaine\|([^}]+)')
     entries = re.split(r'\{\{Source ODS', text)[1:]
     rows = []
     for entry in entries:
         name_m = re.search(r'\|nom\s*=\s*(.+?)(?:\n|\|)', entry)
         name = name_m.group(1).strip() if name_m else 'unknown'
-        domains = re.findall(pattern, entry)
-        domains = [clean_domain(d) for d in domains]
-        domains = [d for d in domains if d]
-        for domain in domains:
-            rows.append({'source_name': name, 'domain': domain})
+        hosts = re.findall(pattern, entry)
+        hosts = [clean_host(d) for d in hosts]
+        hosts = [d for d in hosts if d]
+        for host in hosts:
+            rows.append({'source_name': name, 'host': host})
     return rows
 
 
-# GENERIC: extract domains from wiki table rows
+# GENERIC: extract hosts from wiki table rows
 def parse_wikitext_table(text, lang_config):
     rows = []
-    domains_found = extract_domains_generic(text)
+    hosts_found = extract_hosts_generic(text)
     sections = re.split(r'^==\s*(.+?)\s*==\s*$', text, flags=re.MULTILINE)
     current_section = ''
     for i, section in enumerate(sections):
         if i % 2 == 1:
             current_section = section.strip()
             continue
-        for domain in extract_domains_generic(section):
-            domain = clean_domain(domain)
-            if domain:
-                rows.append({'source_name': current_section or 'general', 'domain': domain})
+        for host in extract_hosts_generic(section):
+            host = clean_host(host)
+            if host:
+                rows.append({'source_name': current_section or 'general', 'host': host})
     seen = set()
     deduped = []
     for r in rows:
-        key = r['domain']
+        key = r['host']
         if key not in seen:
             seen.add(key)
             deduped.append(r)
@@ -148,11 +148,11 @@ def main():
             for r in rows:
                 r['wiki_lang'] = lang
                 r['wiki_page'] = title
-            print(f'  -> {len(rows)} domains')
+            print(f'  -> {len(rows)} hosts')
             all_rows.extend(rows)
 
     for r in all_rows:
-        r['surt_host_name'] = utils.thing_to_surt_host_name(r['domain'])
+        r['surt_host_name'] = utils.thing_to_surt_host_name(r['host'])
     all_rows = [r for r in all_rows if r['surt_host_name']]
 
     seen = {}
@@ -166,7 +166,7 @@ def main():
                 existing['source_name'] += '; ' + r['source_name']
 
     rows = sorted(seen.values(), key=lambda r: (r['wiki_lang'], r['surt_host_name']))
-    print(f'\nTotal: {len(rows)} unique (domain, lang) pairs')
+    print(f'\nTotal: {len(rows)} unique (host, lang) pairs')
     by_lang = {}
     for r in rows:
         by_lang.setdefault(r['wiki_lang'], 0)
@@ -177,14 +177,17 @@ def main():
     import pyarrow as pa, pyarrow.parquet as pq
     schema = pa.schema([
         ('surt_host_name', pa.string()),
-        ('domain', pa.string()),
+        ('host', pa.string()),
         ('wiki_lang', pa.string()),
         ('wiki_page', pa.string()),
         ('source_name', pa.string()),
     ])
     table = pa.table({col.name: [r[col.name] for r in rows] for col in schema}, schema=schema)
-    pq.write_table(table, 'wikipedia-perennial.parquet')
-    print(f'Wrote wikipedia-perennial.parquet')
+    out_dir = utils.dated_output_dir('.')
+    out_path = os.path.join(out_dir, 'wikipedia-perennial.parquet')
+    pq.write_table(table, out_path)
+    utils.refresh_latest_symlink(out_path)
+    print(f'Wrote {out_path} (+ wikipedia-perennial.parquet symlink)')
 
     if DEBUG:
         import pyarrow.csv as csv

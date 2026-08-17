@@ -17,13 +17,13 @@ right_columns:
   #- wikipedia_cat_animal
   #- wikipedia_cat_automotive
   #- wikipedia_cat_cannabis
-  #- wikipedia_cat_children's
+  #- wikipedia_cat_children_s
   #- wikipedia_cat_community
   #- wikipedia_cat_conspiracist
   #- wikipedia_cat_debate
   #- wikipedia_cat_disability
   #- wikipedia_cat_download
-  #- wikipedia_cat_e-commerce
+  #- wikipedia_cat_e_commerce
   #- wikipedia_cat_economics
   #- wikipedia_cat_educational
   #- wikipedia_cat_employment
@@ -37,14 +37,14 @@ right_columns:
   #- wikipedia_cat_history
   #- wikipedia_cat_law_enforcement
   #- wikipedia_cat_legal
-  #- wikipedia_cat_lgbtq-related
+  #- wikipedia_cat_lgbtq_related
   #- wikipedia_cat_lifestyle
   #- wikipedia_cat_linguistics
   #- wikipedia_cat_literature
   #- wikipedia_cat_map
   #- wikipedia_cat_marine
   #- wikipedia_cat_matrimonial
-  #- wikipedia_cat_men's
+  #- wikipedia_cat_men_s
   #- wikipedia_cat_military-themed
   #- wikipedia_cat_music
   #- wikipedia_cat_news
@@ -76,7 +76,7 @@ right_columns:
   #- wikipedia_cat_about_food_and_drink
   #- wikipedia_cat_about_the_media
   #- wikipedia_cat_related_to_spaceflight
-  #- wikipedia_cat_women's
+  #- wikipedia_cat_women_s
   # skipped by default (use --no-skip to include)
   #- wikipedia_cat_blogs
   #- wikipedia_cat_digital_marketing

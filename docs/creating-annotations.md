@@ -55,6 +55,36 @@ your_column_b   (bool/int/float/string)
 
 Sort by `surt_host_name` before writing — this significantly improves join performance.
 
+### Dating your snapshot
+
+If your source data changes over time (e.g. re-scraped periodically), write each run into a
+`fetched=YYYY-MM-DD/` subdirectory rather than overwriting a flat file. DuckDB's hive
+partitioning (enabled everywhere in this project) turns that folder name into a real,
+queryable `fetched` column automatically - no schema changes needed:
+
+```python
+import utils
+
+out_dir = utils.dated_output_dir('.')          # creates ./fetched=2026-06-09/
+out_path = os.path.join(out_dir, 'my-annotation.parquet')
+df.to_parquet(out_path, index=False)
+utils.refresh_latest_symlink(out_path)          # ./my-annotation.parquet -> fetched=.../my-annotation.parquet
+```
+
+`refresh_latest_symlink` keeps a flat-named symlink pointing at the newest snapshot, so
+existing YAML templates, Makefile targets, and downstream tooling that expect
+`my-annotation.parquet` keep working unmodified. Anyone who wants history or wants to
+compare snapshots over time can instead point `table.local` at the whole directory and
+filter/join on `fetched` directly.
+
+If the source data was fetched to a local cache file first, pass it as `cache_ref` so the
+date reflects when the data was actually pulled, not whenever the script happens to re-run
+against a cached copy:
+
+```python
+out_dir = utils.dated_output_dir('.', cache_ref='.cache/source.json')
+```
+
 ### Writing the parquet
 
 ```python
@@ -64,12 +94,18 @@ df = df.sort_values("surt_host_name").reset_index(drop=True)
 df.to_parquet("my-annotation.parquet", index=False)
 ```
 
-For boolean columns, ensure they are actual bools, not objects:
+For boolean columns, use pandas' nullable boolean dtype — NULL means "not annotated",
+an explicit `True`/`False` means the annotation applies/doesn't. Don't fill absent
+values with `False` or `""`; that inflates completeness metrics and conflates
+"checked and negative" with "never annotated":
 
 ```python
 for col in bool_columns:
-    df[col] = df[col].astype(bool)
+    df[col] = df[col].astype("boolean")
 ```
+
+Column names should contain only word characters and underscores - no spaces, quotes,
+or dashes. `utils.sanitize_col()` maps anything else to underscores.
 
 ## Step 2: Provide YAML templates
 
