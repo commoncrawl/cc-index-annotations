@@ -185,11 +185,18 @@ def convert(csv_path, output_path='newsguard.parquet'):
 
     con = duckdb.connect()
     con.register('ng', table)
+    if cc_utils:
+        out_dir = cc_utils.dated_output_dir(os.path.dirname(output_path) or '.', cache_ref=csv_path)
+        dated_path = os.path.join(out_dir, os.path.basename(output_path))
+    else:
+        dated_path = output_path
     con.execute(f"""
         COPY (SELECT * FROM ng ORDER BY surt_host_name)
-        TO '{output_path}' (FORMAT PARQUET)
+        TO '{dated_path}' (FORMAT PARQUET)
     """)
-    print(f'Wrote {output_path}')
+    if cc_utils:
+        cc_utils.refresh_latest_symlink(dated_path)
+    print(f'Wrote {dated_path}' + (f' (+ {output_path} symlink)' if cc_utils else ''))
 
     # Print a quick summary
     result = con.execute(

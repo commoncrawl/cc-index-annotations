@@ -183,8 +183,11 @@ def main():
         ('source_name', pa.string()),
     ])
     table = pa.table({col.name: [r[col.name] for r in rows] for col in schema}, schema=schema)
-    pq.write_table(table, 'wikipedia-perennial.parquet')
-    print(f'Wrote wikipedia-perennial.parquet')
+    out_dir = utils.dated_output_dir('.')
+    out_path = os.path.join(out_dir, 'wikipedia-perennial.parquet')
+    pq.write_table(table, out_path)
+    utils.refresh_latest_symlink(out_path)
+    print(f'Wrote {out_path} (+ wikipedia-perennial.parquet symlink)')
 
     if DEBUG:
         import pyarrow.csv as csv

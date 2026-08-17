@@ -1,6 +1,11 @@
+import os
 import re
+import sys
 import surt
 import pandas as pd
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+import utils
 
 debugging = True  #when enabled, save .tsv files of intermediary and final stages
 
@@ -161,7 +166,10 @@ for col in bool_cols:
 
 df = df.sort_values("surt_host_name").reset_index(drop=True)
 
-df.to_parquet('wikipedia-spam.parquet', index=False)
+out_dir = utils.dated_output_dir('.', cache_ref='wikipedia-spam.txt')
+out_path = os.path.join(out_dir, 'wikipedia-spam.parquet')
+df.to_parquet(out_path, index=False)
+utils.refresh_latest_symlink(out_path)
+print(f'Wrote {out_path} (+ wikipedia-spam.parquet symlink)')
 if debugging:
     df.to_csv('wikipedia-spam.tsv', sep='\t', index=False)
-

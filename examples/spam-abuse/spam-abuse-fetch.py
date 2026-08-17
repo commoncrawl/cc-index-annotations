@@ -14,6 +14,9 @@ from urllib.robotparser import RobotFileParser
 import pandas as pd
 import surt
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+import utils
+
 debugging = False
 
 UA = "spam-abuse-fetcher/1.0 (Common Crawl Foundation; https://github.com/commoncrawl/cc-index-annotations)"
@@ -202,8 +205,11 @@ if __name__ == "__main__":
     for col in [c for c in df.columns if c.startswith("abuse_")]:
         print(f"  {col}: {df[col].sum()}", file=sys.stderr)
 
-    df.to_parquet("spam-abuse.parquet", index=False)
-    print("Wrote spam-abuse.parquet", file=sys.stderr)
+    out_dir = utils.dated_output_dir(".")
+    out_path = os.path.join(out_dir, "spam-abuse.parquet")
+    df.to_parquet(out_path, index=False)
+    utils.refresh_latest_symlink(out_path)
+    print(f"Wrote {out_path} (+ spam-abuse.parquet symlink)", file=sys.stderr)
 
     if debugging:
         df.to_csv("spam-abuse.tsv", sep="\t", index=False)

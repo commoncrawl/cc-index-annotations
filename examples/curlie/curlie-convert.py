@@ -159,8 +159,11 @@ table = result.fetch_arrow_table()
 print(f'Rows: {table.num_rows}')
 
 import pyarrow.parquet as pq
-pq.write_table(table, 'curlie.parquet')
-print('Wrote curlie.parquet')
+out_dir = utils.dated_output_dir('.', cache_ref='curlie-rdf-all.tar.gz')
+out_path = os.path.join(out_dir, 'curlie.parquet')
+pq.write_table(table, out_path)
+utils.refresh_latest_symlink(out_path)
+print(f'Wrote {out_path} (+ curlie.parquet symlink)')
 
 if DEBUG:
     pa_csv.write_csv(table, 'curlie.csv')

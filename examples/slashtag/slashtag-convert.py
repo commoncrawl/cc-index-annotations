@@ -81,8 +81,11 @@ ORDER BY surt_host_name
 url_rows = con.sql("SELECT count(*) FROM slashtag_urls").fetchone()[0]
 print(f'URL-level: {url_rows} rows')
 
-con.sql("COPY slashtag_urls TO 'slashtag.parquet' (FORMAT PARQUET)")
-print('Wrote slashtag.parquet')
+out_dir = utils.dated_output_dir('.', cache_ref=cache_file)
+url_out = os.path.join(out_dir, 'slashtag.parquet')
+con.sql(f"COPY slashtag_urls TO '{url_out}' (FORMAT PARQUET)")
+utils.refresh_latest_symlink(url_out)
+print(f'Wrote {url_out} (+ slashtag.parquet symlink)')
 
 # HOST-level: one row per host, union of all URL categories
 con.sql("""
@@ -97,8 +100,10 @@ ORDER BY surt_host_name
 host_rows = con.sql("SELECT count(*) FROM slashtag_hosts").fetchone()[0]
 print(f'Host-level: {host_rows} rows')
 
-con.sql("COPY slashtag_hosts TO 'slashtag-hosts.parquet' (FORMAT PARQUET)")
-print('Wrote slashtag-hosts.parquet')
+hosts_out = os.path.join(out_dir, 'slashtag-hosts.parquet')
+con.sql(f"COPY slashtag_hosts TO '{hosts_out}' (FORMAT PARQUET)")
+utils.refresh_latest_symlink(hosts_out)
+print(f'Wrote {hosts_out} (+ slashtag-hosts.parquet symlink)')
 
 if DEBUG:
     con.sql("COPY slashtag_urls TO 'slashtag.csv' (FORMAT CSV, HEADER)")

@@ -6,9 +6,12 @@ Requires network access to en.wikipedia.org.
 """
 from __future__ import annotations
 
-import json, re, csv, sys, time
+import json, os, re, csv, sys, time
 from urllib.request import urlopen, Request
 from urllib.parse import quote
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+import utils
 
 UA = "WPSourcesScraper/1.0 (research; contact@example.com)"
 
@@ -453,8 +456,11 @@ def save(rows: list, prefix: str = "wp_sources"):
         bool_cols = STATUS_COLS + LIST_COLS
         for c in bool_cols:
             df[c] = df[c].astype(bool)
-        df.to_parquet(f"{prefix}.parquet", index=False)
-        print(f"Wrote {prefix}.parquet", file=sys.stderr)
+        out_dir = utils.dated_output_dir('.')
+        out_path = os.path.join(out_dir, f"{prefix}.parquet")
+        df.to_parquet(out_path, index=False)
+        utils.refresh_latest_symlink(out_path)
+        print(f"Wrote {out_path} (+ {prefix}.parquet symlink)", file=sys.stderr)
     except ImportError:
         print("WARN: pip install pyarrow for .parquet output", file=sys.stderr)
     except Exception as e:
@@ -483,4 +489,3 @@ if __name__ == "__main__":
     entries = scrape_all()
     rows = explode_to_domain_rows(entries)
     save(rows)
-
