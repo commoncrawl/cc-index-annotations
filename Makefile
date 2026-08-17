@@ -53,7 +53,7 @@ wikipedia-spam: examples/wikipedia/spam/wikipedia-spam.txt examples/wikipedia/sp
 examples/wikipedia/spam/wikipedia-spam.txt:
 	curl -L -o examples/wikipedia/spam/wikipedia-spam.txt --retry 1000 --retry-all-errors --retry-delay 1 https://meta.wikimedia.org/wiki/Spam_blacklist?action=raw
 examples/wikipedia/spam/wikipedia-spam.parquet: examples/wikipedia/spam/wikipedia-spam.txt
-	cd examples/wikipedia/spam; python .convert.py; cd -
+	cd examples/wikipedia/spam && python .convert.py
 examples/wikipedia/spam/annotate.py: shared/host-index-paths.gz
 	cd examples/wikipedia/spam/; ln -s ../../../*.py .
 	cd examples/wikipedia/spam/; ln -sf ../../../shared/host-index-paths.gz .
@@ -64,7 +64,7 @@ examples/web-graph-wikipedia/annotate.py:
 
 spam-abuse: examples/spam-abuse/spam-abuse.parquet examples/spam-abuse/annotate.py
 examples/spam-abuse/spam-abuse.parquet:
-	cd examples/spam-abuse; python spam-abuse-fetch.py; cd -
+	cd examples/spam-abuse && python spam-abuse-fetch.py
 examples/spam-abuse/annotate.py: shared/host-index-paths.gz
 	cd examples/spam-abuse/; ln -s ../../*.py .
 	cd examples/spam-abuse/; ln -sf ../../shared/host-index-paths.gz .
@@ -80,7 +80,7 @@ examples/wikipedia/perennial/annotate.py: shared/host-index-paths.gz
 
 curlie: examples/curlie/curlie.parquet examples/curlie/annotate.py
 examples/curlie/curlie.parquet: examples/curlie/curlie-rdf-all.tar.gz
-	cd examples/curlie; tar xzf curlie-rdf-all.tar.gz; python3 curlie-convert.py; rm -rf curlie-rdf
+	cd examples/curlie && tar xzf curlie-rdf-all.tar.gz && python3 curlie-convert.py && rm -rf curlie-rdf
 examples/curlie/curlie-rdf-all.tar.gz:
 	curl -L -o examples/curlie/curlie-rdf-all.tar.gz https://curlie.org/directory-dl
 examples/curlie/annotate.py: shared/host-index-paths.gz
@@ -136,7 +136,7 @@ examples/tranco-top1m/annotate.py: shared/host-index-paths.gz
 university-ranking: examples/university-ranking/university-ranking.parquet examples/university-ranking/annotate.py
 university-ranking-url: university-ranking examples/university-ranking-url/annotate.py examples/university-ranking-url/cc-index-table.paths.gz
 examples/university-ranking/university-ranking.parquet:
-	cd examples/university-ranking; python university-ranking-fetch.py; cd -
+	cd examples/university-ranking && python university-ranking-fetch.py
 	cd examples/university-ranking-url/; ln -sf ../university-ranking/university-ranking.parquet .
 examples/university-ranking/annotate.py: shared/host-index-paths.gz
 	cd examples/university-ranking/; ln -s ../../*.py .

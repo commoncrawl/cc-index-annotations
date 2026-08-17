@@ -4,7 +4,7 @@ import sys
 import surt
 import pandas as pd
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 import utils
 
 debugging = True  #when enabled, save .tsv files of intermediary and final stages
